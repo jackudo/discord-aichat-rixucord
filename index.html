@@ -869,6 +869,169 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
     .stats-grid .glass-card { padding: 10px !important; }
     .stats-num { font-size: 1.2rem !important; }
 }
+
+/* ===== LIVE PREVIEW (Welcomer) ===== */
+.preview-card {
+    background: #2b2d31;
+    border-radius: 4px;
+    padding: 0;
+    margin-bottom: 25px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.preview-header {
+    background: #1e1f22;
+    padding: 8px 12px;
+    font-size: 0.7rem;
+    color: #949ba4;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.preview-header i { color: #7983f5; font-size: 0.7rem; }
+
+.preview-discord {
+    padding: 12px;
+    display: flex;
+    gap: 0;
+}
+
+.preview-bar {
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+    flex-shrink: 0;
+    background: #5865F2;
+    transition: background 0.3s;
+}
+
+.preview-content {
+    flex-grow: 1;
+    padding-left: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0 10px;
+}
+
+.preview-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    grid-column: 1;
+}
+
+.preview-author img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.preview-author span {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.preview-thumb {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: start;
+}
+
+.preview-thumb img {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.preview-desc {
+    grid-column: 1;
+    font-size: 0.875rem;
+    color: #dbdee1;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+}
+
+.preview-field {
+    grid-column: 1;
+    margin-bottom: 4px;
+}
+
+.preview-field-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.preview-field-value {
+    font-size: 0.875rem;
+    color: #dbdee1;
+}
+
+.preview-banner {
+    grid-column: 1 / -1;
+    margin-top: 6px;
+}
+
+.preview-banner img {
+    width: 100%;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.preview-banner-placeholder {
+    width: 100%;
+    height: 80px;
+    background: #1e1f22;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 0.75rem;
+    border: 2px dashed rgba(255,255,255,0.06);
+}
+
+.preview-footer {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.preview-footer img {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.preview-footer span {
+    font-size: 0.75rem;
+    color: #949ba4;
+}
+
+.preview-ts {
+    font-size: 0.75rem;
+    color: #949ba4;
+    margin-left: 4px;
+}
+
+@media(max-width: 768px) {
+    .preview-thumb img { width: 50px; height: 50px; }
+    .preview-content { padding-left: 10px; }
+}
     </style>
 </head>
 <body>
@@ -1807,6 +1970,36 @@ Enjoyy and Have Fun 🎉</textarea>
             <button id="btnSaveConfig" class="btn-add" onclick="demoPulse(this,'Saved!')" data-i18n="welcome.save">Save Configuration</button>
         </div>
 
+        <!-- ===== LIVE PREVIEW ===== -->
+        <div class="preview-card" id="previewCard">
+            <div class="preview-header">
+                <i class="fas fa-eye"></i>
+                <span data-i18n="welcome.preview">Live Preview</span>
+            </div>
+            <div class="preview-discord">
+                <div class="preview-bar" id="previewBar"></div>
+                <div class="preview-content">
+                    <div class="preview-author" id="previewAuthor">
+                        <img src="https://cdn.discordapp.com/embed/avatars/1.png" id="previewAuthorIcon">
+                        <span id="previewAuthorName">NewMember</span>
+                    </div>
+                    <div class="preview-thumb" id="previewThumb">
+                        <img src="https://cdn.discordapp.com/embed/avatars/1.png" id="previewThumbImg">
+                    </div>
+                    <div class="preview-desc" id="previewDesc">Haiii 🐦 @NewMember 🐦<br>Welcome to <b>RiXUCORD</b> 🚀<br>Enjoyy and Have Fun 🎉</div>
+                    <div id="previewFields"></div>
+                    <div class="preview-banner" id="previewBanner" style="display:none;">
+                        <div class="preview-banner-placeholder">No banner uploaded</div>
+                    </div>
+                    <div class="preview-footer" id="previewFooter">
+                        <img src="https://cdn.discordapp.com/embed/avatars/0.png" id="previewFooterIcon">
+                        <span id="previewFooterText">Welcome to RiXUCORD!</span>
+                        <span class="preview-ts" id="previewTs">Today at 12:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Whitelisted Channels -->
         <div class="section-card">
             <div class="section-title" data-i18n="welcome.channels">Whitelisted Channels</div>
@@ -2164,6 +2357,7 @@ const translations = {
         'welcome.channels_desc': 'Tempel ID Channel untuk aktifkan welcome. Terbatas 1 per server.',
         'welcome.save': 'Simpan Konfigurasi', 'welcome.channel': 'Tempel ID Channel...',
         'welcome.enable': 'Aktifkan di Channel Ini', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'welcome.preview': 'Preview Langsung',
         'rep.title': 'Sistem Reputasi', 'rep.desc': 'Kelola sistem reputasi member dengan keyword + mention.',
         'rep.general': 'Pengaturan Umum', 'rep.allow_all': 'Izinkan Semua Member',
         'rep.allow_all_desc': 'Non-admin juga bisa kasih rep', 'rep.cooldown': 'Cooldown (jam)',
@@ -2267,6 +2461,7 @@ const translations = {
         'welcome.channels_desc': 'Paste a Channel ID to enable welcoming. Limited to 1 per server.',
         'welcome.save': 'Save Configuration', 'welcome.channel': 'Paste Channel ID...',
         'welcome.enable': 'Enable in this Channel', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'welcome.preview': 'Live Preview',
         'rep.title': 'Reputation System', 'rep.desc': 'Manage member reputation system with keyword + mention.',
         'rep.general': 'General Settings', 'rep.allow_all': 'Allow All Members',
         'rep.allow_all_desc': 'Non-admins can also give rep', 'rep.cooldown': 'Cooldown (hours)',
@@ -2557,6 +2752,88 @@ function demoRemoveBanner(btn) {
     document.getElementById('bannerCurrent').style.display = 'none';
 }
 
+// ===== LIVE PREVIEW (Welcomer) =====
+const BOT_AVATAR = 'https://cdn.discordapp.com/embed/avatars/0.png';
+const MEMBER_AVATAR = 'https://cdn.discordapp.com/embed/avatars/1.png';
+
+// Dummy fields (match the 2 dummy field-items in the HTML)
+const previewDummyFields = [
+    { label: 'Read Rules', emoji: '⚠️', channelId: '123456789012345678' },
+    { label: 'Verify', emoji: '✅', channelId: '234567890123456789' }
+];
+
+function updatePreview() {
+    const type = document.getElementById('welcomeType').value;
+    const previewCard = document.getElementById('previewCard');
+    if (type === 'text') { previewCard.style.display = 'none'; return; }
+    previewCard.style.display = 'block';
+
+    // Color bar
+    const color = document.getElementById('embedColor').value || '#5865F2';
+    document.getElementById('previewBar').style.background = color;
+
+    // Author
+    const authorName = document.getElementById('embedAuthorName').value || '{user}';
+    const authorResolved = authorName.replace(/{user}/g, 'NewMember').replace(/{server}/g, 'RiXUCORD').replace(/{count}/g, '42');
+    document.getElementById('previewAuthorName').textContent = authorResolved;
+
+    const authorIconType = document.getElementById('embedAuthorIcon').value;
+    document.getElementById('previewAuthorIcon').src = authorIconType === 'bot' ? BOT_AVATAR : MEMBER_AVATAR;
+
+    // Body
+    let body = document.getElementById('embedBody').value || '';
+    body = body.replace(/{user}/g, '@NewMember')
+        .replace(/{server}/g, 'RiXUCORD')
+        .replace(/{count}/g, '42');
+    // Parse bold **text**
+    body = body.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    // Line breaks
+    body = body.replace(/\n/g, '<br>');
+    document.getElementById('previewDesc').innerHTML = body;
+
+    // Thumbnail
+    const thumbType = document.getElementById('embedThumbnail').value;
+    document.getElementById('previewThumbImg').src = thumbType === 'bot' ? BOT_AVATAR : MEMBER_AVATAR;
+
+    // Fields (dummy data — no backend)
+    const fieldsContainer = document.getElementById('previewFields');
+    fieldsContainer.innerHTML = '';
+    previewDummyFields.forEach(f => {
+        if (!f.label) return;
+        const div = document.createElement('div');
+        div.className = 'preview-field';
+        div.innerHTML = `<div class="preview-field-label">\`${f.label}\`</div><div class="preview-field-value">${f.emoji || ''} #${f.channelId ? f.channelId.slice(-6) : 'channel'}</div>`;
+        fieldsContainer.appendChild(div);
+    });
+
+    // Banner — hardcoded: always show placeholder (no fetch)
+    const bannerEl = document.getElementById('previewBanner');
+    bannerEl.style.display = 'block';
+    bannerEl.innerHTML = '<div class="preview-banner-placeholder">No banner uploaded</div>';
+
+    // Footer
+    const footerText = document.getElementById('embedFooter').value || 'Welcome to {server}!';
+    const footerResolved = footerText.replace(/{server}/g, 'RiXUCORD').replace(/{user}/g, 'NewMember').replace(/{count}/g, '42');
+    document.getElementById('previewFooterText').textContent = footerResolved;
+
+    // Timestamp
+    const now = new Date();
+    const hours = now.getHours();
+    const mins = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h12 = hours % 12 || 12;
+    document.getElementById('previewTs').textContent = `Today at ${h12}:${mins} ${ampm}`;
+}
+
+// Event listeners for real-time preview
+['embedAuthorName', 'embedAuthorIcon', 'embedBody', 'embedColor', 'embedThumbnail', 'embedFooter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+        el.addEventListener('input', updatePreview);
+        el.addEventListener('change', updatePreview);
+    }
+});
+
 function toggleEveryday() {
     const checked = document.getElementById('recEveryday').checked;
     for (let i = 0; i <= 6; i++) document.getElementById('day' + i).checked = checked;
@@ -2723,6 +3000,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Lang
     applyLang();
+
+    // Initial live preview render (welcomer)
+    if (typeof updatePreview === 'function') updatePreview();
 
     // Parallax + page enter
     initParallaxTilt();
