@@ -16,80 +16,35 @@
 
 > ### 🔒 Ini adalah DEMO / DUMMY
 > 
-> Seluruh data yang tampil di dashboard ini adalah **data dummy** — bukan data asli.
-> Bot, server, member, command, dan konfigurasi yang tampil semuanya contoh semata.
+> Semua data yang tampil di dashboard ini adalah **data dummy** — bukan data asli.
+> Bot, server, member, command, dan konfigurasi yang tampil cuma contoh.
 > 
-> Untuk info selengkapnya atau ingin menggunakan bot asli, **join Discord RiXUCORD:**
+> Untuk info selengkapnya atau mau pakai bot asli, **join Discord RiXUCORD:**
 > 
 > ### 👉 [discord.gg/xF265q9ze](https://discord.gg/xF265q9ze)
 
 ---
 
-## 📋 Tentang
+## ✨ Fitur
 
-Dashboard manajemen bot Discord dengan dark theme cyberpunk style. Demo ini adalah **UI showcase** — semua tampilan 1:1 sama dashboard asli, dengan dummy data. Tidak butuh bot aktif atau server backend.
+| Module | Isi |
+|--------|-----|
+| 🏠 Dashboard | Profil bot, uptime, stats, latency, daftar server |
+| 🤖 AI Chat | Personality, banned words, whitelist, provider info + RPM |
+| 🎭 Auto Reaction | Global toggle, channel whitelist, text/user triggers |
+| 📋 Clipboard | Custom trigger → response |
+| ⏰ Timed Messages | One-shot + recurring daily (pilih hari, jam, toggle) |
+| 🛡️ Allowed IDs | Kelola user yang boleh pakai command |
+| 👋 Welcomer | Config welcome card, background upload |
+| 📜 Commands | 24+ command, search, deskripsi ID/EN |
 
-## ✨ Fitur Dashboard
-
-| Module | Deskripsi |
-|--------|-----------|
-| 🏠 **Dashboard** | Profil bot, uptime counter, stats (servers/members/channels/commands), latency, daftar server aktif |
-| 🤖 **AI Chat** | Config personality, banned words, whitelist channel/user, reply mode, provider info (model + RPM meter) |
-| 🎭 **Auto Reaction** | Global toggle, whitelist channel, text & user triggers dengan emoji mapping |
-| 📋 **Clipboard** | Custom trigger → response mapping |
-| ⏰ **Timed Messages** | One-shot scheduled messages + recurring daily messages (day pills: Sen-Sab) |
-| 🛡️ **Allowed IDs** | Manajemen user yang diizinkan pakai command bot |
-| 👋 **Welcomer** | Config welcome card, background upload, font color |
-| 📜 **Commands** | Daftar 24+ command dengan search, deskripsi ID/EN |
-
-## 🎨 Design
-
-- **Theme**: Dark cyberpunk (blurple `#5865F2` accent)
-- **Background**: Animated particle canvas + cyber grid
-- **Cards**: Glass-morphism dengan border glow
-- **Responsive**: Mobile-first, sidebar collapse + overlay
-- **i18n**: Bahasa Indonesia & English (toggle real-time)
-- **Fonts**: Orbitron (headers), Outfit (body), JetBrains Mono (code)
-
-## 🚀 Cara Pakai
-
-### Buka Langsung
-Download `index.html`, buka di browser. Selesai.
-
-### Deploy ke GitHub Pages
-```bash
-# Bikin repo
-git init
-git add .
-git commit -m "Dashboard demo"
-
-# Push ke GitHub
-git remote add origin https://github.com/jackudo/discord-aichat-rixucord.git
-git push -u origin main
-```
-Lalu: **Settings > Pages > Source: main branch** → URL otomatis jadi `https://jackudo.github.io/discord-aichat-rixucord/`
-
-## 🛠️ Tech Stack
-
-- HTML5 + CSS3 (no framework)
-- Vanilla JavaScript
-- Font Awesome 6.5 (icons)
-- GSAP 3.12 (animations)
-- Google Fonts (Orbitron, Outfit, JetBrains Mono)
-
-## 📦 Yang Ada di Demo
+## 📦 Isi Repo
 
 ```
 discord-aichat-rixucord/
-├── index.html      # 1 file standalone (~141KB)
-└── README.md       # Ini
+├── index.html    # 1 file standalone
+└── README.md
 ```
-
-## 🔒 Privacy
-
-- Tidak ada API key, token, atau data sensitif
-- Semua data adalah dummy
-- Tidak ada request ke server eksternal
 
 ## 👤 Author
 
