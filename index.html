@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RIXUCORD Ai Dashboard — Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <link rel="icon" href="https://cdn.discordapp.com/embed/avatars/0.png">
+
+    <style>
+/* ============================================
+   RIXUCORD Ai "BLURPLE COMMAND CENTER"
+   THEME — CSS Variables, Reset, Typography
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+    /* === Background === */
+    --bg-deep: #020203;
+    --bg-surface: #0d0d12;
+    --bg-elevated: #12121a;
+    --bg-glass: rgba(13, 13, 18, 0.75);
+    --bg-glass-heavy: rgba(13, 13, 18, 0.92);
+
+    /* === Brand Colors === */
+    --accent-red: #5865F2;
+    --accent-red-dark: #4752C4;
+    --accent-red-glow: #7983f5;
+    --accent-cyan: #00d4ff;
+    --accent-cyan-glow: #44e5ff;
+    --accent-purple: #a855f7;
+    --accent-green: #22c55e;
+    --accent-gold: #f59e0b;
+
+    /* === Text === */
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-dim: #475569;
+    --text-muted: #334155;
+
+    /* === Neon Glows === */
+    --glow-red: 0 0 30px rgba(88, 101, 242, 0.5);
+    --glow-red-strong: 0 0 60px rgba(88, 101, 242, 0.8);
+    --glow-cyan: 0 0 25px rgba(0, 212, 255, 0.4);
+    --glow-purple: 0 0 20px rgba(168, 85, 247, 0.4);
+    --glow-green: 0 0 15px rgba(34, 197, 94, 0.4);
+
+    /* === Borders === */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-dim: rgba(255, 255, 255, 0.1);
+    --border-neon: rgba(88, 101, 242, 0.35);
+    --border-cyan: rgba(0, 212, 255, 0.3);
+
+    /* === Status (DIJAGA dari style.css lama) === */
+    --status-online: #00ff88;
+    --status-idle: #ffaa00;
+    --status-dnd: #ff3333;
+    --status-offline: #747f8d;
+
+    /* === Status Glows === */
+    --status-online-glow: 0 0 20px rgba(0, 255, 136, 0.5);
+    --status-idle-glow: 0 0 20px rgba(255, 170, 0, 0.5);
+    --status-dnd-glow: 0 0 20px rgba(255, 51, 51, 0.5);
+
+    /* === Layout === */
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 0px;
+    --topbar-height: 56px;
+    --content-padding: 32px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-full: 9999px;
+
+    /* === Transitions === */
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-elastic: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* === Z-Index === */
+    --z-background: 0;
+    --z-content: 10;
+    --z-sidebar: 100;
+    --z-topbar: 200;
+    --z-modal: 900;
+    --z-overlay: 1000;
+
+    /* === Typography === */
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+
+/* === CSS Reset === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: rgba(88, 101, 242, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(88, 101, 242, 0.6); }
+
+/* === Selection === */
+::selection { background: rgba(88, 101, 242, 0.3); color: var(--text-primary); }
+
+/* === Utility === */
+.sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.neon-text {
+    background: linear-gradient(135deg, #fff, var(--accent-red-glow));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; text-shadow: var(--glow-red);
+}
+
+.neon-text-cyan {
+    background: linear-gradient(135deg, #fff, var(--accent-cyan));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; text-shadow: var(--glow-cyan);
+}
+
+/* ============================================
+   RIXUCORD Ai LAYOUT — App Shell, Topbar
+   ============================================ */
+
+.app-wrapper {
+    display: flex; min-height: 100vh; position: relative; z-index: 10;
+}
+
+/* === Topbar === */
+.topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: 48px;
+    background: rgba(13, 13, 18, 0.85); backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.06); z-index: 200;
+    display: flex; align-items: center; padding: 0 20px; gap: 12px;
+    box-shadow: 0 1px 20px rgba(0,0,0,0.4);
+}
+
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+
+.hamburger-btn {
+    width: 40px; height: 40px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+    color: #f1f5f9; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all 0.3s ease; font-size: 1.1rem;
+    position: relative; overflow: hidden;
+}
+.hamburger-btn:hover { border-color: #5865F2; background: rgba(88,101,242,0.1); box-shadow: 0 0 30px rgba(88,101,242,0.5); }
+.hamburger-btn .bar {
+    display: block; width: 18px; height: 2px; background: #f1f5f9;
+    border-radius: 2px; position: absolute; transition: all 0.3s ease;
+}
+.hamburger-btn .bar:nth-child(1) { transform: translateY(-5px); }
+.hamburger-btn .bar:nth-child(2) { transform: translateY(0); }
+.hamburger-btn .bar:nth-child(3) { transform: translateY(5px); }
+.hamburger-btn.open .bar:nth-child(1) { transform: rotate(45deg); }
+.hamburger-btn.open .bar:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+.hamburger-btn.open .bar:nth-child(3) { transform: rotate(-45deg); }
+
+.topbar-brand {
+    font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700;
+    background: linear-gradient(135deg, #fff, #7983f5);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; letter-spacing: 1px;
+}
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.topbar-status { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #94a3b8; }
+.status-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #00ff88;
+    box-shadow: 0 0 20px rgba(0,255,136,0.5); animation: pulse-ring 2s ease-in-out infinite;
+}
+.account-badge {
+    display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 9999px;
+    padding: 4px 12px 4px 4px; cursor: pointer; transition: all 0.3s;
+}
+.account-badge:hover { border-color: rgba(88,101,242,0.35); background: rgba(88,101,242,0.1); }
+.account-badge img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.account-badge span { font-size: 0.85rem; font-weight: 500; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* === Sidebar === */
+.sidebar {
+    position: fixed; top: 48px; left: 0; bottom: 0; width: 240px;
+    background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255,255,255,0.06); z-index: 100;
+    display: flex; flex-direction: column; padding: 16px 10px;
+    transition: transform 0.3s ease; overflow-y: auto; overflow-x: hidden;
+}
+.sidebar.collapsed { transform: translateX(-100%); }
+.sidebar-section { margin-bottom: 8px; }
+.sidebar-label {
+    font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 2px; color: #475569; padding: 12px 12px 8px;
+}
+
+.nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+    border-radius: 12px; color: #94a3b8; text-decoration: none;
+    font-weight: 500; font-size: 0.92rem; cursor: pointer; position: relative;
+    transition: all 0.3s ease; margin-bottom: 2px; border: 1px solid transparent; overflow: hidden;
+}
+.nav-item:hover { color: #f1f5f9; background: rgba(88,101,242,0.08); border-color: rgba(88,101,242,0.15); }
+.nav-item.active { color: #fff; background: rgba(88,101,242,0.12); border-color: rgba(88,101,242,0.35); }
+.nav-item.active::after {
+    content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 60%; background: #5865F2; border-radius: 3px 0 0 3px; box-shadow: 0 0 8px #5865F2;
+}
+.nav-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s; }
+.nav-icon svg { width: 20px; height: 20px; }
+.nav-item.active .nav-icon { color: #5865F2; filter: drop-shadow(0 0 6px #5865F2); }
+
+/* === Main Content === */
+.main-content {
+    flex: 1; margin-left: 240px; margin-top: 48px;
+    min-height: calc(100vh - 48px); padding: 20px 24px;
+    transition: margin-left 0.3s ease; position: relative; z-index: 10;
+}
+.main-content.sidebar-collapsed { margin-left: 0; }
+
+/* === Sidebar Overlay (mobile) === */
+.sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 90;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active { display: block; opacity: 1; }
+
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); z-index: 95; width: 260px; }
+    .sidebar:not(.collapsed) { transform: translateX(0); }
+    .main-content { margin-left: 0 !important; padding: 14px 12px; }
+    .topbar { padding: 0 14px; height: 44px; }
+    .topbar-brand { font-size: 0.95rem; }
+    .hamburger-btn { width: 36px; height: 36px; }
+    .sidebar-overlay.active { display: block; opacity: 1; }
+    .main-container, .rpc-container { width: 100% !important; padding: 0 0 60px !important; max-width: 100% !important; }
+    .section-card, .glass-card, .sc { padding: 16px !important; border-radius: 14px !important; margin-bottom: 12px !important; }
+    .section-title, .st { font-size: 0.85rem !important; margin-bottom: 10px !important; padding-bottom: 6px !important; }
+    .form-grid, .fg { grid-template-columns: 1fr !important; gap: 8px !important; }
+    .input-field, .input-label, .if, .il { font-size: 0.85rem !important; padding: 9px 11px !important; }
+    .btn-add, .btn-primary, .bp { padding: 11px !important; font-size: 0.85rem !important; }
+    .section-header { margin-bottom: 12px !important; }
+    .section-header h1 { font-size: 1.4rem !important; }
+    .section-header p { font-size: 0.8rem !important; }
+    .header h1 { font-size: 1.4rem !important; margin-bottom: 6px !important; }
+    .header { margin-bottom: 16px !important; }
+    .platform-grid, .pg { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+    .platform-btn, .pb { padding: 10px !important; font-size: 0.78rem !important; }
+}
+
+@media (max-width: 430px) {
+    .main-content { padding: 10px 10px; }
+    .section-card, .glass-card, .sc { padding: 14px !important; }
+    .topbar-brand { display: none; }
+    .account-badge span { max-width: 60px; font-size: 0.78rem; }
+}
+
+/* ============================================
+   RIXUCORD Ai COMPONENTS — Cards, Buttons, Forms
+   ============================================ */
+
+/* === Glass Card === */
+.glass-card {
+    background: rgba(13, 13, 18, 0.75); backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 22px;
+    transition: all 0.3s ease; animation: rxFadeIn 0.5s ease forwards;
+}
+@keyframes rxFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.glass-card, .section-card, .main-container, .rpc-container, .terminal-container, .rec-container, .cmd-grid, .music-container {
+    animation: rxFadeIn 0.5s ease forwards;
+}
+.glass-card:hover { border-color: rgba(88,101,242,0.25); box-shadow: 0 0 30px rgba(88,101,242,0.15); }
+
+/* === Section Header === */
+.section-header { text-align: center; margin-bottom: 16px; padding-top: 0; }
+.section-header h1 {
+    font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 800;
+    background: linear-gradient(135deg, #fff, #7983f5);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px; text-shadow: 0 0 30px rgba(88,101,242,0.3); letter-spacing: 1px;
+}
+.section-header p { color: #64748b; font-size: 1rem; font-weight: 400; }
+
+/* === Input Field === */
+.input-field {
+    width: 100%; padding: 14px 16px; background: rgba(5,5,8,0.8);
+    border: 1px solid rgba(88,101,242,0.2); border-radius: 12px; color: #f1f5f9;
+    font-family: 'Outfit', sans-serif; font-size: 0.95rem; outline: none;
+    transition: all 0.3s ease; box-sizing: border-box;
+}
+.input-field:focus { border-color: #5865F2; box-shadow: 0 0 20px rgba(88,101,242,0.2), inset 0 0 10px rgba(88,101,242,0.05); }
+.input-field::placeholder { color: #475569; }
+
+/* === Form Group === */
+.form-group { margin-bottom: 20px; }
+.form-group label {
+    display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.85rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* === Button Primary === */
+.btn-primary {
+    width: 100%; padding: 15px; background: linear-gradient(90deg, #5865F2, #4752C4);
+    border: none; border-radius: 12px; color: #fff; font-size: 1rem; font-weight: 700;
+    cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(88,101,242,0.4); position: relative; overflow: hidden;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(88,101,242,0.6); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* === Button Danger === */
+.btn-danger {
+    background: transparent; border: 1px solid #ff3333; color: #ff3333;
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;
+    font-size: 0.85rem; transition: all 0.3s;
+}
+.btn-danger:hover { background: #ff3333; color: #fff; box-shadow: 0 0 20px rgba(255,51,51,0.4); }
+
+/* === Toggle Switch === */
+.toggle-switch { position: relative; display: inline-block; width: 60px; height: 30px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-switch .slider {
+    position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.08);
+    border-radius: 30px; transition: 0.4s; border: 1px solid rgba(255,255,255,0.1);
+}
+.toggle-switch .slider::before {
+    content: ''; position: absolute; height: 22px; width: 22px; left: 4px; bottom: 3px;
+    background: #f1f5f9; border-radius: 50%; transition: 0.4s;
+}
+.toggle-switch input:checked+.slider { background: #5865F2; box-shadow: 0 0 15px #5865F2; }
+.toggle-switch input:checked+.slider::before { transform: translateX(28px); }
+
+/* === Switch (alias used in sidebar, ai, rpc pages) === */
+.switch { position: relative; display: inline-block; width: 60px; height: 30px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch .slider { position: absolute; cursor: pointer; inset: 0; background: #333; border-radius: 34px; transition: 0.4s; }
+.switch .slider::before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.4s; }
+.switch input:checked + .slider { background: #5865F2; }
+.switch input:checked + .slider::before { transform: translateX(30px); }
+
+/* === Status Radio Buttons === */
+.status-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.radio-label { flex: 1; cursor: pointer; min-width: 70px; }
+.radio-label input { display: none; }
+.radio-btn {
+    display: block; padding: 10px; text-align: center; border-radius: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid transparent; font-size: 0.85rem;
+    font-weight: 600; transition: all 0.3s ease; color: #94a3b8;
+}
+.radio-label:hover .radio-btn { background: rgba(255,255,255,0.08); color: #f1f5f9; }
+.radio-label input:checked+.radio-btn.online { background: rgba(0,255,136,0.15); border-color: #00ff88; color: #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
+.radio-label input:checked+.radio-btn.idle { background: rgba(255,170,0,0.15); border-color: #ffaa00; color: #ffaa00; box-shadow: 0 0 15px rgba(255,170,0,0.2); }
+.radio-label input:checked+.radio-btn.dnd { background: rgba(255,51,51,0.15); border-color: #ff3333; color: #ff3333; box-shadow: 0 0 15px rgba(255,51,51,0.2); }
+.radio-label input:checked+.radio-btn.offline { background: rgba(116,127,141,0.15); border-color: #747f8d; color: #94a3b8; }
+
+/* === Divider === */
+.divider { border: 0; height: 1px; background: rgba(88,101,242,0.15); margin: 24px 0; }
+
+/* === Profile Avatar === */
+.avatar-wrapper {
+    width: 130px; height: 130px; border-radius: 50%; display: flex;
+    justify-content: center; align-items: center; margin: 0 auto; transition: all 0.3s ease;
+}
+.avatar { width: 118px; height: 118px; border-radius: 50%; object-fit: cover; display: block; }
+.stroke-online { border: 3px solid #00ff88; box-shadow: 0 0 20px #00ff88; }
+.stroke-idle { border: 3px solid #ffaa00; box-shadow: 0 0 20px #ffaa00; }
+.stroke-dnd { border: 3px solid #ff3333; box-shadow: 0 0 20px #ff3333; }
+.stroke-offline { border: 3px solid #747f8d; }
+
+/* === Uptime Badge === */
+.uptime-badge {
+    margin-top: 1rem; padding: 12px 24px; background: rgba(88,101,242,0.08);
+    border: 1px solid rgba(88,101,242,0.3); border-radius: 9999px; display: inline-block;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.9rem;
+    color: #5865F2; box-shadow: 0 0 20px rgba(88,101,242,0.15);
+}
+
+/* === Logout Button === */
+.logout-btn {
+    position: absolute; top: 24px; right: 24px; color: #ff3333; text-decoration: none;
+    font-weight: 600; background: rgba(255,51,51,0.08); padding: 8px 16px;
+    border-radius: 9999px; border: 1px solid rgba(255,51,51,0.2); transition: 0.3s;
+    display: flex; align-items: center; gap: 6px; z-index: 10; font-size: 0.85rem;
+}
+.logout-btn:hover { background: #ff3333; color: #fff; box-shadow: 0 0 20px rgba(255,51,51,0.5); }
+@media (max-width: 768px) { .logout-text { display: none; } }
+
+@media (max-width: 768px) {
+    .section-header h1 { font-size: 1.6rem; }
+    .glass-card { padding: 20px; }
+    .status-options { flex-direction: column; }
+    .radio-btn { width: 100%; }
+    .avatar-wrapper { width: 100px; height: 100px; }
+    .avatar { width: 90px; height: 90px; }
+}
+
+/* ============================================
+   RIXUCORD Ai ANIMATIONS
+   ============================================ */
+
+@keyframes hexagonal-reveal {
+    0% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); opacity: 0; filter: blur(10px); }
+    30% { opacity: 0.5; filter: blur(4px); }
+    100% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); opacity: 1; filter: blur(0); }
+}
+.hex-reveal { animation: hexagonal-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes glitch-enter {
+    0% { opacity: 0; transform: scale(1.1); filter: brightness(2) contrast(1.5); }
+    5% { opacity: 0.8; transform: scale(1.0) translateX(-4px); filter: brightness(1.5) contrast(1.3) hue-rotate(30deg); }
+    10% { transform: scale(1.01) translateX(3px); filter: brightness(1.2) contrast(1.1) hue-rotate(-20deg); }
+    15% { transform: scale(1.0) translateX(0); filter: brightness(1) contrast(1) hue-rotate(0deg); }
+    20% { transform: translateX(-2px); filter: brightness(1.1) hue-rotate(10deg); }
+    25% { transform: translateX(0); filter: hue-rotate(0deg); }
+    100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+.glitch-enter { animation: glitch-enter 0.8s ease forwards; }
+
+body.page-loading::after {
+    content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,0,0,0.03) 2px, rgba(255,0,0,0.03) 4px);
+    animation: scanline-boot 0.6s ease-out forwards;
+}
+@keyframes scanline-boot { 0% { opacity: 0.6; } 100% { opacity: 0; } }
+
+@keyframes energy-wave {
+    0% { background-position: -200% 50%; opacity: 0; }
+    100% { background-position: 200% 50%; opacity: 1; }
+}
+.nav-item:hover::before {
+    content: ''; position: absolute; inset: 0; z-index: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(88,101,242,0.15) 25%, rgba(88,101,242,0.3) 50%, rgba(88,101,242,0.15) 75%, transparent 100%);
+    background-size: 200% 100%; animation: energy-wave 0.6s ease; border-radius: 12px; pointer-events: none;
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(88,101,242,0.6); transform: scale(1); }
+    50% { box-shadow: 0 0 0 12px rgba(88,101,242,0); transform: scale(1.05); }
+    100% { box-shadow: 0 0 0 0 rgba(88,101,242,0); transform: scale(1); }
+}
+.nav-item.active .nav-icon { animation: pulse-ring 2s ease-in-out infinite; }
+
+@keyframes neon-slide {
+    0% { transform: scaleY(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: scaleY(1); opacity: 1; filter: drop-shadow(0 0 8px #5865F2); }
+}
+.nav-active-indicator { animation: neon-slide 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+@keyframes holo-tilt-perspective {
+    0% { transform: perspective(400px) rotateY(0) scale(1); filter: drop-shadow(0 0 0px #00d4ff); }
+    50% { transform: perspective(400px) rotateY(-8deg) scale(1.1); filter: drop-shadow(0 0 10px #00d4ff); }
+    100% { transform: perspective(400px) rotateY(0) scale(1); filter: drop-shadow(0 0 0px #00d4ff); }
+}
+.nav-item:hover .nav-icon { animation: holo-tilt-perspective 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+
+@keyframes blade-fold-in {
+    0% { transform: translateX(-100%) rotateY(-90deg); opacity: 0; }
+    100% { transform: translateX(0) rotateY(0deg); opacity: 1; }
+}
+@keyframes blade-fold-out {
+    0% { transform: translateX(0) rotateY(0deg); opacity: 1; }
+    100% { transform: translateX(-100%) rotateY(-90deg); opacity: 0; }
+}
+
+@keyframes stagger-rise {
+    0% { opacity: 0; transform: translateY(40px) rotateX(3deg); filter: blur(4px); }
+    100% { opacity: 1; transform: translateY(0) rotateX(0); filter: blur(0); }
+}
+
+@keyframes plasma-charge {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.btn-cyber {
+    background: linear-gradient(90deg, #5865F2, #4752C4, #5865F2, #4752C4);
+    background-size: 300% 100%; background-position: 100% 50%; transition: background-position 0s;
+}
+.btn-cyber:hover { animation: plasma-charge 1.2s ease forwards; }
+
+@keyframes discharge-flash {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.8); }
+    100% { box-shadow: 0 0 0 30px rgba(255,255,255,0); }
+}
+.btn-discharge { position: relative; overflow: visible; }
+.btn-discharge::after { content: ''; position: absolute; inset: 0; border-radius: inherit; animation: discharge-flash 0.5s ease-out forwards; pointer-events: none; }
+
+@keyframes energy-implode {
+    0% { transform: scale(1); opacity: 1; }
+    30% { transform: scale(0.85); opacity: 0.7; }
+    60% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 40px rgba(34,197,94,0.8); }
+    100% { transform: scale(1); opacity: 1; box-shadow: 0 0 15px rgba(34,197,94,0.3); }
+}
+.btn-success-pulse { animation: energy-implode 0.7s cubic-bezier(0.34,1.56,0.64,1); }
+
+@keyframes glitch-shake {
+    0%,100% { transform: translateX(0); }
+    10% { transform: translateX(-3px) skewX(-1deg); }
+    20% { transform: translateX(3px) skewX(1deg); }
+    30% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    50% { transform: translateX(-1px); }
+    60% { transform: translateX(1px); }
+    70% { transform: translateX(0); }
+}
+@keyframes glitch-rgb {
+    0%,100% { text-shadow: 1px 0 rgba(255,0,0,0.6), -1px 0 rgba(0,255,255,0.6); }
+    25% { text-shadow: -1px 0 rgba(255,0,0,0.8), 1px 0 rgba(0,255,255,0.8); }
+    50% { text-shadow: 2px 0 rgba(255,0,0,0.4), -2px 0 rgba(0,255,255,0.4); }
+    75% { text-shadow: -2px 0 rgba(255,0,0,0.6), 2px 0 rgba(0,255,255,0.6); }
+}
+.error-shake { animation: glitch-shake 0.5s ease-in-out; }
+
+.card-stagger { opacity: 0; animation: stagger-rise 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+.card-tilt { transition: transform 0.1s ease; transform-style: preserve-3d; perspective: 1000px; }
+.card-tilt:hover { transform: translateY(-6px); }
+
+.input-group { position: relative; }
+
+@keyframes electric-arc {
+    0% { opacity: 0; transform: scale(0); }
+    30% { opacity: 1; transform: scale(1.5); }
+    50% { opacity: 0.8; transform: scale(0.8); }
+    70% { opacity: 0.4; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0); }
+}
+.toggle-switch input:checked+.slider::after {
+    content: ''; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
+    background: radial-gradient(circle, #00d4ff, transparent); border-radius: 50%;
+    transform: translate(-50%,-50%) scale(0); animation: electric-arc 0.5s ease-out; pointer-events: none;
+}
+
+@keyframes crt-flicker {
+    0% { opacity: 0.03; }
+    50% { opacity: 0.06; }
+    100% { opacity: 0.03; }
+}
+.crt-scanlines::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px);
+    pointer-events: none; animation: crt-flicker 8s linear infinite;
+}
+
+@keyframes cursor-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+.typewriter-cursor::after { content: '\2588'; animation: cursor-blink 1s step-end infinite; color: #22c55e; }
+
+@keyframes phosphor-glow {
+    0% { color: #00ff41; text-shadow: 0 0 8px #00ff41, 0 0 16px #00ff41; }
+    100% { color: #00cc33; text-shadow: 0 0 2px #00cc33, 0 0 4px #00cc33; }
+}
+.log-line.new-log { animation: phosphor-glow 2s ease-out forwards; }
+
+@keyframes neon-flicker {
+    0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+    20%,24%,55% { opacity: 0.4; }
+}
+.neon-flicker { animation: neon-flicker 4s infinite; }
+
+@keyframes cyberspace-grid {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 60px; }
+}
+.cyber-grid-bg {
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(88,101,242,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(88,101,242,0.03) 1px, transparent 1px);
+    background-size: 60px 60px; animation: cyberspace-grid 8s linear infinite;
+    z-index: 0; pointer-events: none;
+}
+
+#particleCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+
+@keyframes corner-pulse {
+    0%,100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+.corner-accent { position: fixed; width: 120px; height: 120px; pointer-events: none; z-index: 0; }
+.corner-accent::before, .corner-accent::after { content: ''; position: absolute; background: #5865F2; opacity: 0.15; filter: blur(20px); }
+.corner-accent.tl { top: -40px; left: -40px; }
+.corner-accent.tl::before { width: 80px; height: 2px; top: 40px; left: 0; animation: corner-pulse 4s ease-in-out infinite; }
+.corner-accent.tl::after { width: 2px; height: 80px; top: 0; left: 40px; animation: corner-pulse 4s ease-in-out 2s infinite; }
+.corner-accent.br { bottom: -40px; right: -40px; }
+.corner-accent.br::before { width: 80px; height: 2px; bottom: 40px; right: 0; animation: corner-pulse 4s ease-in-out 1s infinite; }
+.corner-accent.br::after { width: 2px; height: 80px; bottom: 0; right: 40px; animation: corner-pulse 4s ease-in-out 3s infinite; }
+
+@keyframes breathing-glow {
+    0%,100% { box-shadow: 0 0 15px rgba(88,101,242,0.2), inset 0 0 15px rgba(88,101,242,0.05); }
+    50% { box-shadow: 0 0 35px rgba(88,101,242,0.5), inset 0 0 25px rgba(88,101,242,0.15); }
+}
+.breathing-glow { animation: breathing-glow 2.5s ease-in-out infinite; }
+
+@keyframes shockwave { to { transform: scale(4); opacity: 0; } }
+.ripple-effect { position: absolute; border-radius: 50%; background: rgba(88,101,242,0.3); transform: scale(0); animation: shockwave 0.6s ease-out forwards; pointer-events: none; }
+
+@keyframes wormhole-expand {
+    0% { transform: scale(1) rotate(0); filter: brightness(1) blur(0); border-radius: 28px; }
+    50% { transform: scale(1.05) rotate(1deg); filter: brightness(1.5) blur(1px); }
+    100% { transform: scale(1) rotate(0); filter: brightness(1) blur(0); }
+}
+
+/* ============================================
+   MODULE PAGES SHARED STYLE (from cmd_*.ejs)
+   ============================================ */
+
+.module-style * { box-sizing: border-box; }
+.module-style .main-container {
+    width: 95%; max-width: 1000px; margin: 0 auto; padding: 40px 20px 100px;
+}
+.module-style .header { text-align: center; margin-bottom: 40px; }
+.module-style .header h1 {
+    font-size: 2.5rem; margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff, #7983f5);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.module-style .header p { color: #888; font-size: 1.1rem; }
+.module-style .section-card {
+    background: #111116; border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px; padding: 30px; margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.module-style .section-title {
+    font-size: 1.2rem; margin-bottom: 20px; color: #7983f5;
+    border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+}
+.module-style .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.module-style .full-width { grid-column: 1 / -1; }
+.module-style .input-group { margin-bottom: 15px; }
+.module-style .input-label {
+    display: block; margin-bottom: 8px; color: #ccc; font-size: 0.9rem; font-weight: 600;
+}
+.module-style .input-field {
+    width: 100%; padding: 12px; background: #050508;
+    border: 1px solid rgba(255,255,255,0.1); color: #fff;
+    border-radius: 10px; outline: none; transition: 0.3s;
+    font-family: 'Outfit', sans-serif; font-size: 0.95rem;
+}
+.module-style .input-field:focus { border-color: #5865F2; box-shadow: 0 0 15px rgba(88,101,242,0.2); }
+.module-style textarea.input-field { min-height: 100px; resize: vertical; }
+.module-style select.input-field { appearance: none; cursor: pointer; }
+.module-style input[type="color"].input-field { padding: 5px; height: 45px; cursor: pointer; }
+.module-style .btn-add {
+    width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 700;
+    background: linear-gradient(90deg, #5865F2, #4752C4); border: none;
+    border-radius: 12px; color: #fff; cursor: pointer; transition: 0.3s;
+    box-shadow: 0 5px 20px rgba(88,101,242,0.3); margin-top: 10px;
+}
+.module-style .btn-add:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(88,101,242,0.5); }
+.module-style .btn-add:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; background: #333; }
+.module-style .btn-delete {
+    background: rgba(88,101,242,0.2); color: #5865F2;
+    border: 1px solid rgba(88,101,242,0.3); padding: 8px 15px;
+    border-radius: 8px; cursor: pointer; transition: 0.2s; flex-shrink: 0;
+}
+.module-style .btn-delete:hover { background: #5865F2; color: white; }
+.module-style .no-items { text-align: center; color: #666; font-style: italic; padding: 20px; }
+.module-style .warning-text { color: #5865F2; font-size: 0.85rem; margin-top: 5px; display: block; }
+.module-style .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.module-style .status-info { flex: 1; min-width: 0; padding-right: 15px; }
+.module-style .server-preview {
+    display: flex; align-items: center; gap: 15px; background: #15151a;
+    padding: 15px; border-radius: 10px; margin: 10px 0; border: 1px solid #5865F2;
+    animation: slideDown 0.3s ease;
+}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.module-style .sp-icon { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; }
+.module-style .sp-info { display: flex; flex-direction: column; }
+.module-style .sp-name { font-weight: bold; color: #fff; }
+.module-style .sp-sub { font-size: 0.8rem; color: #aaa; }
+.module-style .whitelist-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    background: #1a1a20; border-radius: 10px; margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
+}
+.module-style .whitelist-icon { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.module-style .whitelist-info { flex-grow: 1; min-width: 0; margin-right: 5px; }
+.module-style .whitelist-name { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1rem; }
+.module-style .whitelist-sub { font-size: 0.8rem; color: #888; word-break: break-all; line-height: 1.2; }
+.module-style .trigger-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #1a1a20; padding: 15px; border-radius: 12px; margin-bottom: 10px;
+    border: 1px solid rgba(255,255,255,0.05); gap: 15px;
+}
+.module-style .trigger-info { flex-grow: 1; overflow: hidden; }
+.module-style .trigger-name { font-weight: bold; color: #7983f5; margin-bottom: 5px; font-size: 1.1rem; }
+.module-style .trigger-response { color: #ccc; font-size: 0.9rem; white-space: pre-wrap; }
+.module-style .trigger-emojis { color: #7983f5; font-family: 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; word-break: break-all; }
+
+/* Provider Info Card (AI) */
+.provider-card {
+    background: #0d0d12; border: 1px solid rgba(88,101,242,0.2);
+    border-radius: 16px; padding: 22px 26px; margin-bottom: 25px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.provider-badge { width: 48px; height: 48px; border-radius: 12px; background: rgba(88,101,242,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.3rem; }
+.provider-details { flex-grow: 1; min-width: 200px; }
+.provider-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.provider-model { font-size: 1.15rem; font-weight: 700; color: #fff; font-family: 'Courier New', monospace; }
+.provider-fallback { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+.provider-fallback span { color: #7983f5; font-family: 'Courier New', monospace; }
+.rpm-meter { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.rpm-box { text-align: center; min-width: 70px; }
+.rpm-num { font-size: 1.6rem; font-weight: 700; color: #7983f5; font-family: 'Courier New', monospace; line-height: 1; }
+.rpm-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+.rpm-bar { width: 80px; height: 6px; background: #1a1a20; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+.rpm-fill { height: 100%; background: linear-gradient(90deg, #5865F2, #7983f5); border-radius: 3px; transition: width 0.5s ease; }
+
+/* Timed Msg styles */
+.msg-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a20; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; }
+.msg-info { flex-grow: 1; overflow: hidden; }
+.msg-title { font-weight: bold; color: #7983f5; margin-bottom: 5px; font-size: 1.0rem; display: flex; align-items: center; gap: 8px; }
+.msg-detail { color: #ccc; font-size: 0.9rem; white-space: pre-wrap; opacity: 0.8; max-height: 40px; overflow: hidden; text-overflow: ellipsis; }
+.msg-meta { font-size: 0.8rem; color: #666; margin-top: 4px; }
+.channel-preview { display: flex; align-items: center; gap: 15px; background: #15151a; padding: 10px; border-radius: 10px; margin: 10px 0; border: 1px solid #5865F2; animation: slideDown 0.3s ease; }
+.cp-icon { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #333; }
+.cp-info { display: flex; flex-direction: column; }
+.cp-name { font-weight: bold; color: #fff; font-size: 0.9rem; }
+.cp-sub { font-size: 0.75rem; color: #aaa; }
+::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+input[type="date"], input[type="time"] { color-scheme: dark; }
+
+/* Recurring day pills */
+.day-pill { display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: #888; background: #15151a; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; transition: all 0.25s ease; user-select: none; min-width: 44px; text-align: center; }
+.day-pill:hover { border-color: rgba(88,101,242,0.4); color: #aaa; }
+.day-pill input[type="checkbox"] { display: none; }
+.day-pill input[type="checkbox"]:checked + span { color: #fff; }
+.day-pill:has(input:checked) { background: linear-gradient(135deg, #5865F2, #4752C4); border-color: #5865F2; color: #fff; box-shadow: 0 2px 12px rgba(88,101,242,0.35); }
+.day-pill.everyday-pill { padding: 8px 18px; }
+.days-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.recurring-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a20; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 15px; }
+.recurring-item.disabled { opacity: 0.5; }
+.switch-mini { position: relative; display: inline-block; width: 44px; height: 22px; flex-shrink: 0; }
+.switch-mini input { opacity: 0; width: 0; height: 0; }
+.switch-mini .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 22px; }
+.switch-mini .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+.switch-mini input:checked + .slider { background-color: #5865F2; }
+.switch-mini input:checked + .slider:before { transform: translateX(22px); }
+
+/* Help page search */
+.search-box { width: 100%; max-width: 500px; margin: 0 auto 30px; display: block; padding: 14px 20px; background: #050508; border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; outline: none; transition: 0.3s; font-size: 1rem; }
+.search-box:focus { border-color: #5865F2; box-shadow: 0 0 15px rgba(88,101,242,0.2); }
+.search-box::placeholder { color: #555; }
+.cmd-section { background: #111116; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; margin-bottom: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.cmd-section-title { font-size: 1.1rem; font-weight: 700; color: #7983f5; padding: 18px 25px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 10px; background: rgba(88,101,242,0.05); }
+.cmd-list { display: flex; flex-direction: column; }
+.cmd-item { display: flex; align-items: flex-start; gap: 15px; padding: 18px 25px; border-bottom: 1px solid rgba(255,255,255,0.04); transition: 0.2s; }
+.cmd-item:last-child { border-bottom: none; }
+.cmd-item:hover { background: rgba(88,101,242,0.06); }
+.cmd-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(88,101,242,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.85rem; font-weight: 700; color: #7983f5; font-family: 'Courier New', monospace; }
+.cmd-body { flex-grow: 1; min-width: 0; }
+.cmd-name { font-size: 1.05rem; font-weight: 700; color: #fff; font-family: 'Courier New', monospace; margin-bottom: 4px; }
+.cmd-name .prefix { color: #7983f5; }
+.cmd-desc { font-size: 0.9rem; color: #94a3b8; line-height: 1.5; margin-bottom: 6px; }
+.cmd-usage { font-size: 0.82rem; color: #5865F2; font-family: 'Courier New', monospace; background: rgba(88,101,242,0.1); padding: 4px 10px; border-radius: 6px; display: inline-block; border: 1px solid rgba(88,101,242,0.2); }
+.cmd-usage-label { color: #666; font-size: 0.75rem; margin-right: 6px; }
+.no-results { text-align: center; padding: 40px; color: #666; font-style: italic; display: none; }
+.cmd-item.hidden { display: none; }
+
+/* Username display */
+.username-display { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; color: #fff; margin-top: 12px; }
+.disc-tag { color: #7983f5; font-size: 0.9rem; font-weight: 500; }
+
+/* View/section toggling for demo */
+.view { display: none; }
+.view.active { display: block; animation: rxFadeIn 0.4s ease forwards; }
+
+@media (max-width: 768px) {
+    .module-style .main-container { padding: 80px 15px 100px; width: 100%; }
+    .module-style .header h1 { font-size: 2rem; }
+    .module-style .form-grid { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .module-style .btn-delete { width: auto; margin: 0; flex-shrink: 0; padding: 8px 12px; }
+    .module-style .trigger-item { flex-direction: column; align-items: flex-start; text-align: left; }
+    .module-style .trigger-name, .module-style .trigger-emojis { word-break: break-all; }
+    .cmd-item { padding: 15px; flex-wrap: wrap; }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid { max-width: 100% !important; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; margin-top: 12px !important; }
+    .stats-grid .glass-card { padding: 12px !important; }
+    .stats-num { font-size: 1.4rem !important; }
+    .stats-label { font-size: 0.65rem !important; }
+    .dash-section { margin-top: 12px !important; padding: 14px !important; }
+    .latency-num { font-size: 1.1rem !important; }
+    .guild-list { max-height: 300px !important; }
+    .guild-item { padding: 8px 10px !important; gap: 8px !important; }
+    .guild-item img { width: 30px !important; height: 30px !important; }
+    .guild-name { font-size: 0.82rem !important; }
+    .guild-sub { font-size: 0.7rem !important; }
+    .guild-id { display: none !important; }
+    .uptime-badge { font-size: 0.85rem !important; padding: 4px 12px !important; }
+}
+@media (max-width: 430px) {
+    .stats-grid { gap: 6px !important; }
+    .stats-grid .glass-card { padding: 10px !important; }
+    .stats-num { font-size: 1.2rem !important; }
+}
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="cyber-grid-bg"></div>
+    <canvas id="particleCanvas"></canvas>
+    <div class="corner-accent tl"></div>
+    <div class="corner-accent br"></div>
+
+    <!-- App Shell -->
+    <div class="app-wrapper">
+        <!-- ============== SIDEBAR ============== -->
+        <aside class="sidebar" id="appSidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label" data-i18n="nav.main">Utama</div>
+                <a href="#dashboard" class="nav-item nav-link active" data-view="dashboard">
+                    <span class="nav-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label" data-i18n="nav.modules">Modul</div>
+                <a href="#ai" class="nav-item nav-link" data-view="ai">
+                    <span class="nav-icon"><i class="fas fa-robot" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.ai">AI Chat</span>
+                </a>
+                <a href="#reaction" class="nav-item nav-link" data-view="reaction">
+                    <span class="nav-icon"><i class="fas fa-smile" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.reaction">Auto Reaction</span>
+                </a>
+                <a href="#clipboard" class="nav-item nav-link" data-view="clipboard">
+                    <span class="nav-icon"><i class="fas fa-clipboard" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.clipboard">Clipboard</span>
+                </a>
+                <a href="#timed_msg" class="nav-item nav-link" data-view="timed_msg">
+                    <span class="nav-icon"><i class="fas fa-clock" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.timed_msg">Pesan Terjadwal</span>
+                </a>
+                <a href="#allowed" class="nav-item nav-link" data-view="allowed">
+                    <span class="nav-icon"><i class="fas fa-shield-alt" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.allowed">ID Diizinkan</span>
+                </a>
+                <a href="#welcomer" class="nav-item nav-link" data-view="welcomer">
+                    <span class="nav-icon"><i class="fas fa-hand-sparkles" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.welcomer">Welcomer</span>
+                </a>
+                <a href="#help" class="nav-item nav-link" data-view="help">
+                    <span class="nav-icon"><i class="fas fa-list-alt" style="font-size:15px;color:#7983f5"></i></span>
+                    <span class="nav-label" data-i18n="nav.cmd_list">Commands</span>
+                </a>
+            </div>
+            <div class="sidebar-section" style="margin-top:auto;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;color:#94a3b8;font-weight:600;">ID</span>
+                    <label class="switch">
+                        <input type="checkbox" id="langToggle" onchange="setLang(this.checked ? 'en' : 'id')">
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-size:0.85rem;color:#94a3b8;font-weight:600;">EN</span>
+                </div>
+                <a href="javascript:void(0)" class="nav-item" style="color:#ff3333;" onclick="alert('Demo mode: logout tidak aktif.')">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
+                    <span class="nav-label" data-i18n="nav.logout">Keluar</span>
+                </a>
+            </div>
+        </aside>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ============== TOPBAR ============== -->
+        <header class="topbar" id="appTopbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+                <span class="topbar-brand">RIXUCORD Ai</span>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-status">
+                    <span class="status-dot"></span>
+                    <span style="font-size:0.8rem" data-i18n="topbar.online">Online</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============== MAIN CONTENT ============== -->
+        <main class="main-content" id="mainContent">
+
+<!-- ============ VIEW: DASHBOARD (index.ejs) ============ -->
+<div class="view active" id="view-dashboard">
+    <div class="dashboard-grid" style="grid-template-columns:1fr;max-width:800px;margin:0 auto;">
+        <div>
+            <!-- Bot Profile Card -->
+            <div class="glass-card" style="text-align:center;">
+                <div class="avatar-wrapper stroke-online" id="avatarWrapper">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar" class="avatar">
+                </div>
+                <h1 class="username-display">RIXUCORD Ai<span class="disc-tag">#0000</span></h1>
+                <div class="uptime-section">
+                    <div class="uptime-label" style="color:var(--text-secondary);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;" data-i18n="home.uptime">Waktu Aktif Sistem</div>
+                    <div class="uptime-badge" id="uptime">Loading...</div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px;">
+                <div class="glass-card" style="padding:18px;text-align:center;">
+                    <div class="stats-num" style="font-size:1.8rem;font-weight:700;color:#7983f5;font-family:'Courier New',monospace;line-height:1;">4</div>
+                    <div class="stats-label" style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;" data-i18n="home.servers">Server</div>
+                </div>
+                <div class="glass-card" style="padding:18px;text-align:center;">
+                    <div class="stats-num" style="font-size:1.8rem;font-weight:700;color:#7983f5;font-family:'Courier New',monospace;line-height:1;">12.480</div>
+                    <div class="stats-label" style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;" data-i18n="home.members">Member</div>
+                </div>
+                <div class="glass-card" style="padding:18px;text-align:center;">
+                    <div class="stats-num" style="font-size:1.8rem;font-weight:700;color:#7983f5;font-family:'Courier New',monospace;line-height:1;">96</div>
+                    <div class="stats-label" style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;" data-i18n="home.channels">Channel</div>
+                </div>
+                <div class="glass-card" style="padding:18px;text-align:center;">
+                    <div class="stats-num" style="font-size:1.8rem;font-weight:700;color:#7983f5;font-family:'Courier New',monospace;line-height:1;">24</div>
+                    <div class="stats-label" style="font-size:0.72rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-top:6px;" data-i18n="home.commands">Command</div>
+                </div>
+            </div>
+
+            <!-- Latency + Status Mode -->
+            <div class="glass-card dash-section" style="margin-top:24px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                    <div>
+                        <div style="font-size:0.75rem;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;" data-i18n="home.latency">Latensi</div>
+                        <div class="latency-num" style="font-size:1.3rem;font-weight:700;color:#7983f5;font-family:'Courier New',monospace;" id="latency">42ms</div>
+                    </div>
+                    <div style="font-size:2rem;" id="pingIcon">📡</div>
+                </div>
+                <form id="statusForm" onsubmit="return false;">
+                    <div class="form-group">
+                        <label data-i18n="home.status_mode">Status Mode</label>
+                        <div class="status-options">
+                            <label class="radio-label"><input type="radio" name="status" value="online" checked onchange="updateAvatarRing('online')"><span class="radio-btn online" data-i18n="home.online">Online</span></label>
+                            <label class="radio-label"><input type="radio" name="status" value="idle" onchange="updateAvatarRing('idle')"><span class="radio-btn idle" data-i18n="home.idle">Idle</span></label>
+                            <label class="radio-label"><input type="radio" name="status" value="dnd" onchange="updateAvatarRing('dnd')"><span class="radio-btn dnd" data-i18n="home.dnd">DND</span></label>
+                            <label class="radio-label"><input type="radio" name="status" value="invisible" onchange="updateAvatarRing('invisible')"><span class="radio-btn offline" data-i18n="home.invisible">Invisible</span></label>
+                        </div>
+                    </div>
+                    <button type="submit" id="updateStatusBtn" class="btn-primary" data-i18n="home.update_status" onclick="demoPulse(this,'Saved!')">Update Status</button>
+                </form>
+            </div>
+
+            <!-- Guilds List -->
+            <div class="glass-card dash-section" style="margin-top:24px;">
+                <div style="font-size:1.1rem;font-weight:700;color:#7983f5;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-server" style="font-size:0.9rem;"></i>
+                    <span data-i18n="home.active_guilds">Server Aktif</span>
+                </div>
+                <div class="guild-list" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;padding-right:4px;" id="guildList">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: AI CHAT (cmd_ai.ejs) ============ -->
+<div class="view" id="view-ai">
+    <div class="module-style">
+    <div class="main-container">
+        <div class="header">
+            <h1 data-i18n="ai.title">Sistem AI Chat</h1>
+            <p data-i18n="ai.desc">Atur asisten AI pribadi kamu.</p>
+        </div>
+
+        <!-- Provider Info (dummy) -->
+        <div class="provider-card" id="providerCard">
+            <div class="provider-badge"><i class="fas fa-microchip" style="color:#7983f5;"></i></div>
+            <div class="provider-details">
+                <div class="provider-label" data-i18n="ai.provider_model">Model Aktif</div>
+                <div class="provider-model" id="provModel">glm-5.2</div>
+                <div class="provider-fallback" id="provFallback"><span data-i18n="ai.fallback">Cadangan</span>: <span>deepseek-v4-pro</span></div>
+            </div>
+            <div class="rpm-meter">
+                <div class="rpm-box">
+                    <div class="rpm-num" id="rpmUsed">18</div>
+                    <div class="rpm-label" data-i18n="ai.rpm_used">Terpakai</div>
+                    <div class="rpm-bar"><div class="rpm-fill" id="rpmFill" style="width:18%;"></div></div>
+                </div>
+                <div class="rpm-box">
+                    <div class="rpm-num" id="rpmLimit">100</div>
+                    <div class="rpm-label" data-i18n="ai.rpm_limit">Limit RPM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Personality Config -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="ai.personality">Kepribadian & Aturan</div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label class="input-label" data-i18n="ai.model">Model AI</label>
+                    <select id="modelType" class="input-field">
+                        <option value="slow" data-i18n="ai.model_slow">Slow (Thinking) - Kualitas Terbaik</option>
+                        <option value="fast" data-i18n="ai.model_fast">Fast (Instruct) - Kecepatan Tinggi</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-i18n="ai.name">Nama AI</label>
+                    <input type="text" id="aiName" class="input-field" value="RIXUCORD Ai">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-i18n="ai.backstory">Backstory</label>
+                    <input type="text" id="backstory" class="input-field" value="Asisten AI pribadi yang serba bisa">
+                </div>
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="ai.personality_label">Kepribadian</label>
+                    <input type="text" id="personality" class="input-field" value="Lucu, Sarkastis, Profesional">
+                </div>
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="ai.rules">Aturan Sistem</label>
+                    <textarea id="rules" class="input-field">Jangan ping everyone. Jawab singkat dan padat.</textarea>
+                </div>
+            </div>
+            <button class="btn-add" id="btnSavePersonality" onclick="demoPulse(this,'Saved!')" data-i18n="ai.save_settings">Simpan Pengaturan</button>
+        </div>
+
+        <!-- Banned Words -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="ai.banned">Kata Terlarang (Keamanan)</div>
+            <p data-i18n="ai.banned_desc" style="color:#888; font-size:0.85rem; margin-bottom:15px;">AI akan abaikan pesan yang mengandung kata/frasa ini.</p>
+            <div class="input-group">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="newBannedWord" class="input-field" placeholder="cth: age" data-i18n-placeholder="ai.banned_placeholder">
+                    <button class="btn-add" style="width:auto; margin:0;" onclick="addBannedWord()" data-i18n="ai.add">Tambah</button>
+                </div>
+            </div>
+            <div id="bannedList" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:15px;">
+                <div style="background:#2a2a35; padding:8px 15px; border-radius:20px; display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,0.1);">
+                    <span>age</span>
+                    <span onclick="this.parentElement.remove()" style="cursor:pointer; color:#5865F2; font-weight:bold;">&times;</span>
+                </div>
+                <div style="background:#2a2a35; padding:8px 15px; border-radius:20px; display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,0.1);">
+                    <span>18+</span>
+                    <span onclick="this.parentElement.remove()" style="cursor:pointer; color:#5865F2; font-weight:bold;">&times;</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Whitelisted Channels -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="ai.channels">Channel Diizinkan</div>
+            <p data-i18n="ai.channels_desc" style="color:#888; font-size:0.85rem; margin-bottom:15px;">Aktifkan AI untuk channel tertentu (Wajib mention).</p>
+            <input type="text" id="inputChannel" class="input-field" placeholder="Tempel ID Channel..." data-i18n-placeholder="ai.channel_placeholder">
+            <div id="previewChannel" style="display:none;"></div>
+            <button id="btnAddChannel" class="btn-add" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')" data-i18n="ai.add_channel">Tambah Channel</button>
+            <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#ai-chat</div>
+                        <div class="whitelist-sub">in RIXUCORD Hub</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#bot-commands</div>
+                        <div class="whitelist-sub">in Gaming Lounge</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="no-items" style="display:none;" data-i18n="ai.none">Belum ada.</div>
+            </div>
+        </div>
+
+        <!-- DM & Group Chats -->
+        <div class="form-grid">
+            <div class="section-card">
+                <div class="section-title" data-i18n="ai.dm_users">User DM AI</div>
+                <p data-i18n="ai.dm_desc" style="color:#888; font-size:0.85rem; margin-bottom:15px;">AI chat di DM dengan user ini (Tanpa ping).</p>
+                <input type="text" id="inputUser" class="input-field" placeholder="Tempel ID User..." data-i18n-placeholder="ai.user_placeholder">
+                <div id="previewUser" style="display:none;"></div>
+                <button id="btnAddUser" class="btn-add" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')" data-i18n="ai.add_user">Tambah User</button>
+                <div id="userList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <div class="whitelist-item">
+                        <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                        <div class="whitelist-info">
+                            <div class="whitelist-name">Kudo</div>
+                            <div class="whitelist-sub">ID: 123456789012345678</div>
+                        </div>
+                        <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-title" data-i18n="ai.groups">Group Chat Diizinkan</div>
+                <p data-i18n="ai.groups_desc" style="color:#888; font-size:0.85rem; margin-bottom:15px;">Aktifkan untuk Group DM tertentu.</p>
+                <input type="text" id="inputGroup" class="input-field" placeholder="Tempel ID Group..." data-i18n-placeholder="ai.group_placeholder">
+                <div style="margin: 10px 0; display:flex; align-items:center;">
+                    <input type="checkbox" id="chkGroupMention" style="transform: scale(1.2); margin-right: 8px; cursor:pointer;">
+                    <label for="chkGroupMention" data-i18n="ai.group_mention" style="color:#ccc; cursor:pointer; font-size:0.9rem;">Balas HANYA saat Di-mention</label>
+                </div>
+                <div id="previewGroup" style="display:none;"></div>
+                <button id="btnAddGroup" class="btn-add" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')" data-i18n="ai.add_group">Tambah Group</button>
+                <div id="groupList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <div class="no-items" data-i18n="ai.none">Belum ada.</div>
+                </div>
+            </div>
+            <div class="section-card" style="border: 1px solid rgba(88, 101, 242, 0.3);">
+                <div class="section-title" data-i18n="ai.blocklist" style="color:#5865F2; border-color: rgba(88,101,242,0.2);">Blocklist User</div>
+                <p data-i18n="ai.blocklist_desc" style="color:#888; font-size:0.85rem; margin-bottom:15px;">AI akan abaikan user ini sepenuhnya di semua server dan DM.</p>
+                <input type="text" id="inputBlocked" class="input-field" placeholder="Tempel ID User..." data-i18n-placeholder="ai.blocked_placeholder">
+                <div id="previewBlocked" style="display:none;"></div>
+                <button id="btnAddBlocked" class="btn-add" style="background: linear-gradient(90deg, #5865F2, #4752C4); box-shadow: 0 5px 20px rgba(88, 101, 242, 0.3);" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')" data-i18n="ai.block_user">Block User</button>
+                <div id="blockedList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <div class="no-items" data-i18n="ai.none">Belum ada.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Reply Mode -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="ai.reply_mode">Mode Balasan AI</div>
+            <div class="status-row">
+                <div class="status-info">
+                    <span data-i18n="ai.reply_mention" style="font-size: 1.1rem; font-weight:600; color:#fff;">Balas Hanya saat Di-mention</span>
+                    <p data-i18n="ai.reply_mention_desc" style="color: #aaa; font-size: 0.85rem; margin-top: 5px;">AI hanya balas saat ada yang ping/mention bot. Mode default.</p>
+                </div>
+                <label class="switch"><input type="radio" name="replyMode" id="replyModeMention" value="mention" checked><span class="slider"></span></label>
+            </div>
+            <div class="status-row">
+                <div class="status-info">
+                    <span data-i18n="ai.reply_all" style="font-size: 1.1rem; font-weight:600; color:#fff;">Balas Semua Pesan</span>
+                    <p data-i18n="ai.reply_all_desc" style="color: #aaa; font-size: 0.85rem; margin-top: 5px;">AI balas semua pesan di channel yang diizinkan (tanpa ping). <span class="warning-text" data-i18n="ai.reply_all_warn">⚠ Peringatan: Bisa jadi spam.</span></p>
+                </div>
+                <label class="switch"><input type="radio" name="replyMode" id="replyModeAll" value="all"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <!-- Disable Ping in Reply -->
+        <div class="section-card">
+            <div class="status-row">
+                <div class="status-info">
+                    <span data-i18n="ai.disable_ping" style="font-size: 1.1rem; font-weight:600; color:#fff;">Matikan Ping di Balasan</span>
+                    <p data-i18n="ai.disable_ping_desc" style="color: #aaa; font-size: 0.85rem; margin-top: 5px;">Jika aktif, AI akan ganti semua mention user di balasannya jadi username biasa (tanpa ping).</p>
+                </div>
+                <label class="switch"><input type="checkbox" id="disablePing"><span class="slider"></span></label>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: AUTO REACTION (cmd_reaction.ejs) ============ -->
+<div class="view" id="view-reaction">
+    <div class="module-style">
+    <div class="main-container">
+        <div class="header">
+            <h1 data-i18n="reaction.title">Auto Reaction</h1>
+            <p data-i18n="reaction.desc">Kelola reaksi otomatis dari jauh.</p>
+        </div>
+
+        <!-- Global Toggle -->
+        <div class="section-card">
+            <div class="status-row">
+                <div class="status-info">
+                    <span style="font-size: 1.1rem; font-weight:600;" data-i18n="reaction.global">Aktifkan Global</span>
+                    <p style="color: #888; font-size: 0.85rem; margin-top: 5px;">
+                        <span id="globalStatusText" data-i18n="reaction.global_on">ON: Reaksi aktif di mana-mana.</span>
+                    </p>
+                </div>
+                <label class="switch"><input type="checkbox" id="globalToggle" checked onchange="demoReactionGlobal(this)"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <!-- Whitelisted Channels -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="reaction.channels">Channel Diizinkan</div>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;" data-i18n="reaction.channels_desc">Aktifkan walau Global OFF.</p>
+            <input type="text" id="inputChannel" class="input-field" placeholder="Tempel ID Channel..." data-i18n-placeholder="ai.channel_placeholder">
+            <div id="previewChannel" style="display:none;"></div>
+            <button id="btnAddChannel" class="btn-add" data-i18n="reaction.add_channel" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')">Tambah Channel</button>
+            <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#general</div>
+                        <div class="whitelist-sub">in RIXUCORD Hub</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Trigger -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="reaction.add_trigger">Tambah Trigger Baru</div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label class="input-label" data-i18n="reaction.type">Tipe</label>
+                    <select id="newType" class="input-field">
+                        <option value="text" data-i18n="reaction.type_text">Text / Keyword</option>
+                        <option value="user" data-i18n="reaction.type_user">User ID</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-i18n="reaction.trigger">Trigger</label>
+                    <input type="text" id="newTrigger" class="input-field" placeholder="Keyword or User ID...">
+                </div>
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="reaction.emojis">Emoji Reaksi</label>
+                    <input type="text" id="newEmojis" class="input-field" data-i18n-placeholder="reaction.emojis_placeholder" placeholder="cth: 🔥 💯 <a:dance:123456>">
+                </div>
+            </div>
+            <button class="btn-add" data-i18n="reaction.add_trigger_btn" onclick="addReactionTrigger()">Tambah Trigger</button>
+        </div>
+
+        <!-- Trigger Lists -->
+        <div class="form-grid">
+            <div class="section-card">
+                <div class="section-title">Text Triggers</div>
+                <div id="textList">
+                    <div class="trigger-item">
+                        <div class="trigger-info">
+                            <div class="trigger-name">"halo"</div>
+                            <div class="trigger-emojis">👋 🎉</div>
+                        </div>
+                        <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="trigger-item">
+                        <div class="trigger-info">
+                            <div class="trigger-name">"gg"</div>
+                            <div class="trigger-emojis">🏆 💯 🔥</div>
+                        </div>
+                        <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-title">User Triggers</div>
+                <div id="userList">
+                    <div class="trigger-item">
+                        <div class="trigger-info">
+                            <div class="trigger-name">User: 123456789012345678</div>
+                            <div class="trigger-emojis">👑 ⭐</div>
+                        </div>
+                        <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: CLIPBOARD (cmd_clipboard.ejs) ============ -->
+<div class="view" id="view-clipboard">
+    <div class="module-style">
+    <div class="main-container">
+        <div class="header">
+            <h1 data-i18n="clip.title">Clipboard</h1>
+            <p data-i18n="clip.desc">Buat kata trigger dan respons kustom.</p>
+        </div>
+
+        <!-- Add New Pair -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="clip.add_pair">Tambah Pair Baru</div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label class="input-label" data-i18n="clip.trigger_word">Kata Trigger (Bisa dipakai user)</label>
+                    <input type="text" id="newTrigger" class="input-field" placeholder="cth: halo" data-i18n-placeholder="clip.trigger_placeholder">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-i18n="clip.response">Respons</label>
+                    <textarea id="newResponse" class="input-field" placeholder="cth: Halo juga!" data-i18n-placeholder="clip.response_placeholder" style="resize: vertical; min-height: 100px; font-family: inherit;"></textarea>
+                </div>
+            </div>
+            <button class="btn-add" data-i18n="clip.add" onclick="addClipPair()">Tambah ke Clipboard</button>
+        </div>
+
+        <!-- Trigger List -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="clip.active">Item Clipboard Aktif</div>
+            <div id="clipList">
+                <div class="trigger-item">
+                    <div class="trigger-info">
+                        <div class="trigger-name">!halo</div>
+                        <div class="trigger-response">Halo juga! Selamat datang 😄</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-info">
+                        <div class="trigger-name">!rules</div>
+                        <div class="trigger-response">1. No spam 2. No NSFW 3. Sopan 4. Dengerin staff</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="trigger-item">
+                    <div class="trigger-info">
+                        <div class="trigger-name">!socials</div>
+                        <div class="trigger-response">IG: @rixucord | YT: RIXUCORD Official | TikTok: @rixucord</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: TIMED MSG (cmd_timed_msg.ejs) ============ -->
+<div class="view" id="view-timed_msg">
+    <div class="module-style">
+    <div class="main-container">
+        <div class="header">
+            <h1 data-i18n="timed.title">Pesan Terjadwal</h1>
+            <p data-i18n="timed.desc">Jadwalkan pesan untuk dikirim di tanggal dan waktu tertentu.</p>
+        </div>
+
+        <!-- Add New Config -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="timed.schedule_new">Jadwalkan Pesan Baru</div>
+            <div class="input-group">
+                <label class="input-label" data-i18n="timed.channel">ID Channel atau User (DM)</label>
+                <input type="text" id="channelId" class="input-field" placeholder="Tempel ID Channel atau User..." data-i18n-placeholder="timed.channel_placeholder">
+                <div id="channelPreview" style="margin-top: 10px; display: none;"></div>
+            </div>
+            <div class="form-grid">
+                <div class="input-group">
+                    <label class="input-label" data-i18n="timed.date">Tanggal (MM/DD)</label>
+                    <input type="text" id="msgDate" class="input-field" placeholder="02/23">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" data-i18n="timed.time">Waktu (12h)</label>
+                    <input type="text" id="msgTime" class="input-field" placeholder="11:43 PM">
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; color: #666; margin-bottom: 15px; text-align: right;">
+                <i class="fas fa-globe"></i> <span data-i18n="timed.timezone">Zona Waktu Kamu:</span> <span id="userTimezone">Detecting...</span>
+            </div>
+            <div class="input-group">
+                <label class="input-label" data-i18n="timed.content">Isi Pesan</label>
+                <textarea id="messageContent" class="input-field" placeholder="Tulis pesan..." data-i18n-placeholder="timed.content_placeholder" style="resize: vertical; min-height: 100px;"></textarea>
+            </div>
+            <button id="btnSave" class="btn-add" data-i18n="timed.schedule_btn" disabled onclick="alert('Demo: isi channel ID untuk enable.')">Jadwalkan Pesan</button>
+        </div>
+
+        <!-- Timed List -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="timed.active">Pesan Terjadwal</div>
+            <div id="timedList">
+                <div class="msg-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <i class="fas fa-hashtag"></i> 123456789012345678
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">2d 4h 30m left</span>
+                        </div>
+                        <div class="msg-detail">Selamat datang event malam minggu! Jangan lupa join voice.</div>
+                        <div class="msg-meta"><i class="fas fa-clock"></i> 7/2/2026, 8:00:00 PM</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.msg-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="msg-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <i class="fas fa-hashtag"></i> 234567890123456789
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">5d 12h left</span>
+                        </div>
+                        <div class="msg-detail">Giveaway result announcement — pemenang akan diumumin!</div>
+                        <div class="msg-meta"><i class="fas fa-clock"></i> 7/5/2026, 10:00:00 AM</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.msg-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RECURRING MESSAGES ===== -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="recurring.title">Pesan Berulang (Harian)</div>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;" data-i18n="recurring.desc">Kirim pesan berulang di hari yang dipilih pada jam tertentu.</p>
+            <div class="input-group">
+                <label class="input-label" data-i18n="timed.channel">ID Channel atau User (DM)</label>
+                <input type="text" id="recChannelId" class="input-field" placeholder="Tempel ID Channel atau User..." data-i18n-placeholder="timed.channel_placeholder">
+                <div id="recChannelPreview" style="margin-top: 10px; display: none;"></div>
+            </div>
+            <div class="form-grid">
+                <div class="input-group" style="grid-column: 1 / -1;">
+                    <label class="input-label" data-i18n="recurring.days">Hari</label>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                        <label class="day-pill everyday-pill">
+                            <input type="checkbox" id="recEveryday" onchange="toggleEveryday()">
+                            <span data-i18n="recurring.everyday">Setiap Hari</span>
+                        </label>
+                    </div>
+                    <div class="days-row" id="recDays">
+                        <label class="day-pill"><input type="checkbox" id="day0" value="0" onchange="syncEveryday()"><span data-i18n="recurring.sun">Min</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day1" value="1" onchange="syncEveryday()"><span data-i18n="recurring.mon">Sen</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day2" value="2" onchange="syncEveryday()"><span data-i18n="recurring.tue">Sel</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day3" value="3" onchange="syncEveryday()"><span data-i18n="recurring.wed">Rab</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day4" value="4" onchange="syncEveryday()"><span data-i18n="recurring.thu">Kam</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day5" value="5" onchange="syncEveryday()"><span data-i18n="recurring.fri">Jum</span></label>
+                        <label class="day-pill"><input type="checkbox" id="day6" value="6" onchange="syncEveryday()"><span data-i18n="recurring.sat">Sab</span></label>
+                    </div>
+                </div>
+                <div class="input-group" style="grid-column: 1 / -1;">
+                    <label class="input-label" data-i18n="recurring.time">Jam (24h)</label>
+                    <input type="time" id="recTime" class="input-field" value="08:00">
+                    <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        <i class="fas fa-globe"></i> <span data-i18n="timed.timezone">Zona Waktu Kamu:</span> <span id="recTimezone"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label" data-i18n="timed.content">Isi Pesan</label>
+                <textarea id="recMessage" class="input-field" placeholder="Tulis pesan..." data-i18n-placeholder="timed.content_placeholder" style="resize: vertical; min-height: 100px;"></textarea>
+            </div>
+            <button id="btnRecSave" class="btn-add" data-i18n="recurring.add_btn" disabled onclick="alert('Demo: isi channel ID untuk enable.')">Tambah Pesan Berulang</button>
+        </div>
+
+        <!-- Recurring List -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="recurring.active">Pesan Berulang Aktif</div>
+            <div id="recList">
+                <div class="recurring-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <i class="fas fa-redo"></i> #announcements
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">Sen, Rab, Jum @ 09:00</span>
+                        </div>
+                        <div class="msg-detail">Selamat pagi! Semangat buat hari ini 💪</div>
+                        <div class="msg-meta"><i class="fas fa-clock"></i> 09:00 · Sen, Rab, Jum · Asia/Jakarta</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                        <label class="switch-mini"><input type="checkbox" checked onchange="this.closest('.recurring-item').classList.toggle('disabled', !this.checked)"><span class="slider"></span></label>
+                        <button class="btn-delete" onclick="this.closest('.recurring-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="recurring-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <i class="fas fa-redo"></i> #general
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">Setiap hari @ 22:00</span>
+                        </div>
+                        <div class="msg-detail">Selamat malam semuanya, tidur yang nyenyak 🌙</div>
+                        <div class="msg-meta"><i class="fas fa-clock"></i> 22:00 · Setiap hari · Asia/Jakarta</div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                        <label class="switch-mini"><input type="checkbox" checked onchange="this.closest('.recurring-item').classList.toggle('disabled', !this.checked)"><span class="slider"></span></label>
+                        <button class="btn-delete" onclick="this.closest('.recurring-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: ALLOWED (cmd_allowed.ejs) ============ -->
+<div class="view" id="view-allowed">
+    <div class="module-style">
+    <div class="main-container" style="max-width:800px;">
+        <div class="header">
+            <h1 data-i18n="allowed.title">Manajer ID Diizinkan</h1>
+            <p data-i18n="allowed.desc">Kelola user yang diizinkan pakai command bot.</p>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-user-plus"></i> <span data-i18n="allowed.add_user">Tambah Akses User</span>
+            </div>
+            <p style="color:#888; font-size:0.9rem; margin-bottom:15px;" data-i18n="allowed.hint">Tempel ID User untuk beri akses. Bot harus bisa fetch user (satu server/DM).</p>
+            <input type="text" id="inputUser" class="input-field" data-i18n-placeholder="allowed.user_placeholder" placeholder="Tempel ID User...">
+            <div id="previewUser" style="display:none;"></div>
+            <button id="btnAdd" class="btn-add" data-i18n="allowed.add_btn" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')">Tambah Akses User</button>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-users-cog"></i> <span data-i18n="allowed.users_list">User Diizinkan</span>
+            </div>
+            <div id="userList">
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon" style="width:45px;height:45px;border:2px solid #333;">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name" style="font-size:1.1rem;">Kudo</div>
+                        <div class="whitelist-sub" style="font-family:monospace;">123456789012345678</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i> <span data-i18n="allowed.remove">Hapus</span></button>
+                </div>
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="whitelist-icon" style="width:45px;height:45px;border:2px solid #333;">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name" style="font-size:1.1rem;">Sora</div>
+                        <div class="whitelist-sub" style="font-family:monospace;">234567890123456789</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i> <span data-i18n="allowed.remove">Hapus</span></button>
+                </div>
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/2.png" class="whitelist-icon" style="width:45px;height:45px;border:2px solid #333;">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name" style="font-size:1.1rem;">Rin</div>
+                        <div class="whitelist-sub" style="font-family:monospace;">345678901234567890</div>
+                    </div>
+                    <button class="btn-delete" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i> <span data-i18n="allowed.remove">Hapus</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: WELCOMER (cmd_welcomer.ejs) ============ -->
+<div class="view" id="view-welcomer">
+    <div class="module-style">
+    <div class="main-container">
+        <div class="header">
+            <h1 data-i18n="welcome.title">Welcomer</h1>
+            <p data-i18n="welcome.desc">Buat gambar welcome live untuk server kamu.</p>
+        </div>
+
+        <div class="form-grid">
+            <!-- Setup Form & Preview -->
+            <div class="section-card">
+                <div class="section-title" data-i18n="welcome.preview">Opsi Preview Welcome</div>
+
+                <div class="input-group full-width" style="margin-bottom: 25px;">
+                    <label class="input-label" data-i18n="welcome.type">Tipe Welcome</label>
+                    <select id="welcomeType" class="input-field" onchange="toggleWelcomeType()">
+                        <option value="card" data-i18n="welcome.type_card">Card Welcome (Gambar)</option>
+                        <option value="text" data-i18n="welcome.type_text">Text Welcome</option>
+                    </select>
+                </div>
+
+                <!-- CARD SETUP -->
+                <div id="cardSetupSection" class="form-grid">
+                    <div class="input-group full-width">
+                        <label class="input-label" data-i18n="welcome.card_text">Teks Card Gambar</label>
+                        <textarea id="cardMessage" class="input-field" style="min-height: 80px; resize: vertical; padding: 12px; font-family: inherit;">WELCOME TO {server}&#10;{user}&#10;Member #{count}</textarea>
+                        <p style="color:#aaa; font-size: 0.85rem; margin-top: 10px;">
+                            <b><span data-i18n="welcome.placeholders">Placeholder:</span></b> {user}, {server}, {count}. Pakai enter untuk baris baru di card.
+                        </p>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label class="input-label" data-i18n="welcome.bg_label">Background Image</label>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(88,101,242,0.2);">
+                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                <input type="file" id="bgFile" accept="image/jpeg,image/png" style="display:none;" onchange="document.getElementById('bgFileName').textContent=this.files[0]?this.files[0].name+' ('+(this.files[0].size/1024/1024).toFixed(2)+' MB)':'No file selected'; document.getElementById('btnUploadBg').style.display=this.files[0]?'inline-block':'none'">
+                                <button type="button" class="btn-add" style="width:auto; margin:0; padding:10px 20px;" onclick="document.getElementById('bgFile').click()" data-i18n="welcome.browse">
+                                    <i class="fas fa-image" style="margin-right:6px;"></i> Browse File
+                                </button>
+                                <span id="bgFileName" style="color:#888; font-size:0.85rem;">No file selected</span>
+                                <button type="button" id="btnUploadBg" class="btn-add" style="width:auto; margin:0; padding:10px 20px; display:none;" onclick="demoUploadBg(this)" data-i18n="welcome.upload">Upload</button>
+                            </div>
+                            <div id="bgUploadResult" style="margin-top:10px;"></div>
+                            <p style="color:#aaa; font-size:0.8rem; margin-top:10px; line-height:1.6;">
+                                <i class="fas fa-info-circle" style="color:#7983f5; margin-right:4px;"></i>
+                                <span data-i18n="welcome.bg_info">Format: JPG atau PNG. Maksimal 5MB. File otomatis disimpan sebagai welcome.jpg. Rekomendasi ukuran: 1024x450 pixels.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label class="input-label" data-i18n="welcome.font_color">Warna Font Username</label>
+                        <select id="wTextColor" class="input-field">
+                            <option value="white" data-i18n="welcome.white">Putih</option>
+                            <option value="black" data-i18n="welcome.black">Hitam</option>
+                            <option value="red" data-i18n="welcome.red">Merah</option>
+                            <option value="purple" data-i18n="welcome.purple">Ungu</option>
+                            <option value="yellow" data-i18n="welcome.yellow">Kuning</option>
+                            <option value="orange" data-i18n="welcome.orange">Oranye</option>
+                            <option value="green" data-i18n="welcome.green">Hijau</option>
+                            <option value="blue" data-i18n="welcome.blue">Biru</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TEXT SETUP -->
+                <div id="textSetupSection" class="form-grid" style="display: none;">
+                    <div class="input-group full-width">
+                        <label class="input-label">Custom Text Message</label>
+                        <textarea id="textMessage" class="input-field" style="min-height: 100px; resize: vertical; padding: 12px; font-family: inherit;">hey {user} welcome to the {server} you are {count} member</textarea>
+                        <p style="color:#aaa; font-size: 0.85rem; margin-top: 10px;">
+                            <b><span data-i18n="welcome.placeholders">Placeholder:</span></b> {user}, {server}, {count}
+                        </p>
+                    </div>
+                </div>
+
+                <button id="btnSaveConfig" data-i18n="welcome.save" onclick="demoPulse(this,'Saved!')" style="width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 700; background: linear-gradient(90deg, #5865F2, #4752C4); border: none; border-radius: 12px; color: #fff; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 5px 20px rgba(88, 101, 242, 0.3);">
+                    Simpan Perubahan
+                </button>
+            </div>
+
+            <!-- Whitelisted Channels -->
+            <div class="section-card">
+                <div class="section-title">Whitelisted Channels</div>
+                <p style="color:#888; font-size:0.85rem; margin-bottom:15px;">Paste a specific Channel ID to enable welcoming. (Limited to 1 per server)</p>
+                <input type="text" id="inputChannel" class="input-field" data-i18n-placeholder="welcome.channel" placeholder="Tempel ID Channel...">
+                <div id="previewChannel" style="display:none;"></div>
+                <button id="btnAddChannel" class="btn-add" data-i18n="welcome.enable" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')">Aktifkan di Channel Ini</button>
+                <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                    <div class="whitelist-item">
+                        <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                        <div class="whitelist-info">
+                            <div class="whitelist-name">#welcome</div>
+                            <div class="whitelist-sub">RIXUCORD Hub | Type: CARD</div>
+                        </div>
+                        <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="whitelist-item">
+                        <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="whitelist-icon">
+                        <div class="whitelist-info">
+                            <div class="whitelist-name">#gerbang</div>
+                            <div class="whitelist-sub">Gaming Lounge | Type: TEXT</div>
+                        </div>
+                        <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- ============ VIEW: HELP (cmd_help.ejs) ============ -->
+<div class="view" id="view-help">
+    <div class="module-style">
+    <div class="main-container" style="max-width:900px;">
+        <div class="header">
+            <h1 data-i18n="help_page.title">Daftar Command</h1>
+            <p data-i18n="help_page.desc">Semua command bot yang tersedia beserta penjelasan dan cara pakai.</p>
+        </div>
+
+        <input type="text" class="search-box" id="searchCmd" data-i18n-placeholder="help_page.search_placeholder" placeholder="Cari command..." oninput="filterCmds()">
+
+        <div class="cmd-section">
+            <div class="cmd-section-title"><i class="fas fa-terminal"></i> <span data-i18n="help_page.utility">Command Utility</span></div>
+            <div class="cmd-list" id="cmdList">
+                <div class="cmd-item" data-search="purge delete messages hapus pesan"><div class="cmd-icon">PR</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>purge</div><div class="cmd-desc" data-cmd="purge"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!purge &lt;count&gt;</span></div></div>
+                <div class="cmd-item" data-search="say echo text ulang teks"><div class="cmd-icon">SY</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>say</div><div class="cmd-desc" data-cmd="say"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!say &lt;text&gt;</span></div></div>
+                <div class="cmd-item" data-search="lock lockdown channel kunci"><div class="cmd-icon">LK</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>lock</div><div class="cmd-desc" data-cmd="lock"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!lock</span></div></div>
+                <div class="cmd-item" data-search="unlock lockdown channel buka kunci"><div class="cmd-icon">UL</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>unlock</div><div class="cmd-desc" data-cmd="unlock"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!unlock</span></div></div>
+                <div class="cmd-item" data-search="warn warning user peringatan"><div class="cmd-icon">WN</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>warn</div><div class="cmd-desc" data-cmd="warn"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!warn &lt;@user&gt; [reason]</span></div></div>
+                <div class="cmd-item" data-search="mute timeout silence user bisikan"><div class="cmd-icon">MT</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>mute</div><div class="cmd-desc" data-cmd="mute"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!mute &lt;@user&gt; [duration] [reason]</span></div></div>
+                <div class="cmd-item" data-search="unmute unmute timeout user lepas"><div class="cmd-icon">UM</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>unmute</div><div class="cmd-desc" data-cmd="unmute"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!unmute &lt;@user&gt;</span></div></div>
+                <div class="cmd-item" data-search="kick remove user server keluar usir"><div class="cmd-icon">KK</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>kick</div><div class="cmd-desc" data-cmd="kick"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!kick &lt;@user&gt; [reason]</span></div></div>
+                <div class="cmd-item" data-search="ban block user server blokir larang"><div class="cmd-icon">BN</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>ban</div><div class="cmd-desc" data-cmd="ban"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!ban &lt;@user&gt; [reason]</span></div></div>
+                <div class="cmd-item" data-search="unban unban user lepas ban"><div class="cmd-icon">UB</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>unban</div><div class="cmd-desc" data-cmd="unban"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!unban &lt;userId&gt;</span></div></div>
+                <div class="cmd-item" data-search="slowmode slow mode rate limit lambat"><div class="cmd-icon">SM</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>slowmode</div><div class="cmd-desc" data-cmd="slowmode"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!slowmode &lt;seconds&gt;</span></div></div>
+                <div class="cmd-item" data-search="nuke recreate delete channel clear bom"><div class="cmd-icon">NK</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>nuke</div><div class="cmd-desc" data-cmd="nuke"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!nuke</span></div></div>
+                <div class="cmd-item" data-search="trap kick typing trap channel jebakan"><div class="cmd-icon">TR</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>trap</div><div class="cmd-desc" data-cmd="trap"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!trap [on|off|list]</span></div></div>
+                <div class="cmd-item" data-search="serverinfo server info guild info server"><div class="cmd-icon">SI</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>serverinfo</div><div class="cmd-desc" data-cmd="serverinfo"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!serverinfo</span></div></div>
+                <div class="cmd-item" data-search="userinfo user info member info user"><div class="cmd-icon">UI</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>userinfo</div><div class="cmd-desc" data-cmd="userinfo"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!userinfo [@user]</span></div></div>
+                <div class="cmd-item" data-search="roleinfo role info info role"><div class="cmd-icon">RI</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>roleinfo</div><div class="cmd-desc" data-cmd="roleinfo"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!roleinfo &lt;@role&gt;</span></div></div>
+                <div class="cmd-item" data-search="avatar profile picture image foto profil"><div class="cmd-icon">AV</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>avatar</div><div class="cmd-desc" data-cmd="avatar"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!avatar [@user]</span></div></div>
+                <div class="cmd-item" data-search="poll vote question reaction voting"><div class="cmd-icon">PL</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>poll</div><div class="cmd-desc" data-cmd="poll"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!poll &lt;question&gt; | option1 | option2 | ...</span></div></div>
+                <div class="cmd-item" data-search="giveaway prize winner draw hadiah undian"><div class="cmd-icon">GW</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>giveaway</div><div class="cmd-desc" data-cmd="giveaway"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!giveaway &lt;duration&gt; &lt;prize&gt;</span></div></div>
+            </div>
+        </div>
+
+        <div class="cmd-section">
+            <div class="cmd-section-title"><i class="fas fa-magic"></i> <span data-i18n="help_page.special">Command Khusus</span></div>
+            <div class="cmd-list">
+                <div class="cmd-item" data-search="trigger clipboard custom pemicu"><div class="cmd-icon">CL</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">&lt;</span>trigger<span class="prefix">&gt;</span></div><div class="cmd-desc" data-cmd="trigger"></div></div></div>
+                <div class="cmd-item" data-search="math calculator calculate hitung kalkulator"><div class="cmd-icon">MA</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">&lt;</span>math<span class="prefix">&gt;</span></div><div class="cmd-desc" data-cmd="math"></div></div></div>
+                <div class="cmd-item" data-search="currency exchange fiat uang konversi"><div class="cmd-icon">FX</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">&lt;</span>currency<span class="prefix">&gt;</span></div><div class="cmd-desc" data-cmd="currency"></div></div></div>
+                <div class="cmd-item" data-search="ip lookup address cari alamat"><div class="cmd-icon">IP</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">&lt;</span>ip<span class="prefix">&gt;</span></div><div class="cmd-desc" data-cmd="ip"></div></div></div>
+            </div>
+        </div>
+
+        <div class="cmd-section">
+            <div class="cmd-section-title"><i class="fas fa-bolt"></i> <span data-i18n="help_page.reaction_role">Reaction Role</span></div>
+            <div class="cmd-list">
+                <div class="cmd-item" data-search="reactionrole reaction role setup reaction role"><div class="cmd-icon">RR</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>reactionrole</div><div class="cmd-desc" data-cmd="reactionrole"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!reactionrole &lt;subcommand&gt; [args]</span></div></div>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResults" data-i18n="help_page.no_results">Gak ada command yang cocok sama pencarian kamu.</div>
+    </div>
+    </div>
+</div>
+
+        </main>
+    </div>
+
+    <script>
+/* ============================================
+   RIXUCORD Ai — Language Toggle (ID/EN)
+   ============================================ */
+
+const translations = {
+    id: {
+        'nav.main': 'Utama', 'nav.modules': 'Modul', 'nav.dashboard': 'Dashboard',
+        'nav.ai': 'AI Chat', 'nav.rpc': 'RPC Config', 'nav.reaction': 'Auto Reaction',
+        'nav.clipboard': 'Clipboard', 'nav.auto_msg': 'Auto Message', 'nav.timed_msg': 'Pesan Terjadwal',
+        'nav.allowed': 'ID Diizinkan', 'nav.welcomer': 'Welcomer', 'nav.cmd_list': 'Commands',
+        'nav.logout': 'Keluar', 'topbar.online': 'Online',
+        'home.uptime': 'Waktu Aktif Sistem', 'home.status_mode': 'Status Mode',
+        'home.servers': 'Server', 'home.members': 'Member', 'home.channels': 'Channel',
+        'home.commands': 'Command', 'home.latency': 'Latensi', 'home.active_guilds': 'Server Aktif',
+        'home.online': 'Online', 'home.idle': 'Idle', 'home.dnd': 'DND', 'home.invisible': 'Invisible',
+        'home.update_status': 'Update Status',
+        'ai.title': 'Sistem AI Chat', 'ai.desc': 'Atur asisten AI pribadi kamu.',
+        'ai.provider_model': 'Model Aktif', 'ai.fallback': 'Cadangan', 'ai.rpm_used': 'Terpakai',
+        'ai.rpm_limit': 'Limit RPM', 'ai.personality': 'Kepribadian & Aturan', 'ai.model': 'Model AI',
+        'ai.model_slow': 'Slow (Thinking) - Kualitas Terbaik', 'ai.model_fast': 'Fast (Instruct) - Kecepatan Tinggi',
+        'ai.name': 'Nama AI', 'ai.backstory': 'Backstory', 'ai.personality_label': 'Kepribadian',
+        'ai.rules': 'Aturan Sistem', 'ai.save_settings': 'Simpan Pengaturan',
+        'ai.banned': 'Kata Terlarang (Keamanan)', 'ai.banned_desc': 'AI akan abaikan pesan yang mengandung kata/frasa ini.',
+        'ai.banned_placeholder': 'cth: age', 'ai.add': 'Tambah', 'ai.channels': 'Channel Diizinkan',
+        'ai.channels_desc': 'Aktifkan AI untuk channel tertentu (Wajib mention).', 'ai.channel_placeholder': 'Tempel ID Channel...',
+        'ai.add_channel': 'Tambah Channel', 'ai.dm_users': 'User DM AI',
+        'ai.dm_desc': 'AI chat di DM dengan user ini (Tanpa ping).', 'ai.user_placeholder': 'Tempel ID User...',
+        'ai.add_user': 'Tambah User', 'ai.groups': 'Group Chat Diizinkan',
+        'ai.groups_desc': 'Aktifkan untuk Group DM tertentu.', 'ai.group_placeholder': 'Tempel ID Group...',
+        'ai.group_mention': 'Balas HANYA saat Di-mention', 'ai.add_group': 'Tambah Group',
+        'ai.blocklist': 'Blocklist User', 'ai.blocklist_desc': 'AI akan abaikan user ini sepenuhnya di semua server dan DM.',
+        'ai.blocked_placeholder': 'Tempel ID User...', 'ai.block_user': 'Block User',
+        'ai.reply_mode': 'Mode Balasan AI', 'ai.reply_mention': 'Balas Hanya saat Di-mention',
+        'ai.reply_mention_desc': 'AI hanya balas saat ada yang ping/mention bot. Mode default.',
+        'ai.reply_all': 'Balas Semua Pesan', 'ai.reply_all_desc': 'AI balas semua pesan di channel yang diizinkan (tanpa ping).',
+        'ai.reply_all_warn': '⚠ Peringatan: Bisa jadi spam.', 'ai.disable_ping': 'Matikan Ping di Balasan',
+        'ai.disable_ping_desc': 'Jika aktif, AI akan ganti semua mention user di balasannya jadi username biasa (tanpa ping).',
+        'ai.none': 'Belum ada.',
+        'reaction.title': 'Auto Reaction', 'reaction.desc': 'Kelola reaksi otomatis dari jauh.',
+        'reaction.global': 'Aktifkan Global', 'reaction.global_on': 'ON: Reaksi aktif di mana-mana.',
+        'reaction.channels': 'Channel Diizinkan', 'reaction.channels_desc': 'Aktifkan walau Global OFF.',
+        'reaction.add_channel': 'Tambah Channel', 'reaction.add_trigger': 'Tambah Trigger Baru',
+        'reaction.type': 'Tipe', 'reaction.type_text': 'Text / Keyword', 'reaction.type_user': 'User ID',
+        'reaction.trigger': 'Trigger', 'reaction.emojis': 'Emoji Reaksi',
+        'reaction.emojis_placeholder': 'cth: 🔥 💯 <a:dance:123456>', 'reaction.add_trigger_btn': 'Tambah Trigger',
+        'clip.title': 'Clipboard', 'clip.desc': 'Buat kata trigger dan respons kustom.',
+        'clip.add_pair': 'Tambah Pair Baru', 'clip.trigger_word': 'Kata Trigger (Bisa dipakai user)',
+        'clip.trigger_placeholder': 'cth: halo', 'clip.response': 'Respons', 'clip.response_placeholder': 'cth: Halo juga!',
+        'clip.add': 'Tambah ke Clipboard', 'clip.active': 'Item Clipboard Aktif',
+        'timed.title': 'Pesan Terjadwal', 'timed.desc': 'Jadwalkan pesan untuk dikirim di tanggal dan waktu tertentu.',
+        'timed.schedule_new': 'Jadwalkan Pesan Baru', 'timed.channel': 'ID Channel atau User (DM)',
+        'timed.channel_placeholder': 'Tempel ID Channel atau User...', 'timed.date': 'Tanggal (MM/DD)',
+        'timed.time': 'Waktu (12h)', 'timed.timezone': 'Zona Waktu Kamu:', 'timed.content': 'Isi Pesan',
+        'timed.content_placeholder': 'Tulis pesan...', 'timed.schedule_btn': 'Jadwalkan Pesan',
+        'timed.active': 'Pesan Terjadwal',
+        'recurring.title': 'Pesan Berulang (Harian)', 'recurring.desc': 'Kirim pesan berulang di hari yang dipilih pada jam tertentu.',
+        'recurring.days': 'Hari', 'recurring.everyday': 'Setiap Hari', 'recurring.sun': 'Min', 'recurring.mon': 'Sen',
+        'recurring.tue': 'Sel', 'recurring.wed': 'Rab', 'recurring.thu': 'Kam', 'recurring.fri': 'Jum', 'recurring.sat': 'Sab',
+        'recurring.time': 'Jam (24h)', 'recurring.add_btn': 'Tambah Pesan Berulang', 'recurring.active': 'Pesan Berulang Aktif',
+        'allowed.title': 'Manajer ID Diizinkan', 'allowed.desc': 'Kelola user yang diizinkan pakai command bot.',
+        'allowed.add_user': 'Tambah Akses User', 'allowed.user_placeholder': 'Tempel ID User...',
+        'allowed.add_btn': 'Tambah Akses User', 'allowed.remove': 'Hapus',
+        'allowed.hint': 'Tempel ID User untuk beri akses. Bot harus bisa fetch user (satu server/DM).',
+        'allowed.users_list': 'User Diizinkan',
+        'help_page.title': 'Daftar Command', 'help_page.desc': 'Semua command bot yang tersedia beserta penjelasan dan cara pakai.',
+        'help_page.search_placeholder': 'Cari command...', 'help_page.utility': 'Command Utility',
+        'help_page.special': 'Command Khusus', 'help_page.reaction_role': 'Reaction Role',
+        'help_page.usage': 'Pakai:', 'help_page.no_results': 'Gak ada command yang cocok sama pencarian kamu.',
+        'welcome.title': 'Welcomer', 'welcome.desc': 'Buat gambar welcome live untuk server kamu.',
+        'welcome.preview': 'Opsi Preview Welcome', 'welcome.type': 'Tipe Welcome',
+        'welcome.type_card': 'Card Welcome (Gambar)', 'welcome.type_text': 'Text Welcome',
+        'welcome.card_text': 'Teks Card Gambar', 'welcome.placeholders': 'Placeholder: {user}, {server}, {count}. Pakai enter untuk baris baru di card.',
+        'welcome.font_color': 'Warna Font Username', 'welcome.white': 'Putih', 'welcome.black': 'Hitam',
+        'welcome.red': 'Merah', 'welcome.purple': 'Ungu', 'welcome.yellow': 'Kuning', 'welcome.orange': 'Oranye',
+        'welcome.green': 'Hijau', 'welcome.blue': 'Biru', 'welcome.save': 'Simpan Perubahan',
+        'welcome.channel': 'Tempel ID Channel...', 'welcome.enable': 'Aktifkan di Channel Ini',
+        'welcome.bg_label': 'Background Image', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'welcome.bg_info': 'Format: JPG atau PNG. Maksimal 5MB. File otomatis disimpan sebagai welcome.jpg. Rekomendasi ukuran: 1024x450 pixels.',
+        'common.none': 'Belum ada.'
+    },
+    en: {
+        'nav.main': 'Main', 'nav.modules': 'Modules', 'nav.dashboard': 'Dashboard',
+        'nav.ai': 'AI Chat', 'nav.rpc': 'RPC Config', 'nav.reaction': 'Auto Reaction',
+        'nav.clipboard': 'Clipboard', 'nav.auto_msg': 'Auto Message', 'nav.timed_msg': 'Timed Messages',
+        'nav.allowed': 'Allowed IDs', 'nav.welcomer': 'Welcomer', 'nav.cmd_list': 'Commands',
+        'nav.logout': 'Logout', 'topbar.online': 'Online',
+        'home.uptime': 'System Uptime', 'home.status_mode': 'Status Mode',
+        'home.servers': 'Servers', 'home.members': 'Members', 'home.channels': 'Channels',
+        'home.commands': 'Commands', 'home.latency': 'Latency', 'home.active_guilds': 'Active Servers',
+        'home.online': 'Online', 'home.idle': 'Idle', 'home.dnd': 'DND', 'home.invisible': 'Invisible',
+        'home.update_status': 'Update Status',
+        'ai.title': 'AI Chat System', 'ai.desc': 'Configure your personal AI assistant.',
+        'ai.provider_model': 'Active Model', 'ai.fallback': 'Fallback', 'ai.rpm_used': 'Used',
+        'ai.rpm_limit': 'RPM Limit', 'ai.personality': 'Personality & Rules', 'ai.model': 'AI Model',
+        'ai.model_slow': 'Slow (Thinking) - Best Quality', 'ai.model_fast': 'Fast (Instruct) - High Speed',
+        'ai.name': 'AI Name', 'ai.backstory': 'Backstory', 'ai.personality_label': 'Personality',
+        'ai.rules': 'System Rules', 'ai.save_settings': 'Save Settings',
+        'ai.banned': 'Banned Words (Safety)', 'ai.banned_desc': 'AI will ignore messages containing these words/phrases.',
+        'ai.banned_placeholder': 'e.g. age', 'ai.add': 'Add', 'ai.channels': 'Whitelisted Channels',
+        'ai.channels_desc': 'Enable AI for specific channels (Mention required).', 'ai.channel_placeholder': 'Paste Channel ID...',
+        'ai.add_channel': 'Add Channel', 'ai.dm_users': 'AI DM Users',
+        'ai.dm_desc': 'AI talks in DMs with these users (No ping required).', 'ai.user_placeholder': 'Paste User ID...',
+        'ai.add_user': 'Add User', 'ai.groups': 'Whitelisted Group Chats',
+        'ai.groups_desc': 'Enable for specific Group DMs.', 'ai.group_placeholder': 'Paste Group ID...',
+        'ai.group_mention': 'Reply ONLY when Mentioned', 'ai.add_group': 'Add Group',
+        'ai.blocklist': 'Blocklist Users', 'ai.blocklist_desc': 'AI will ignore these users completely across all servers and DMs.',
+        'ai.blocked_placeholder': 'Paste User ID...', 'ai.block_user': 'Block User',
+        'ai.reply_mode': 'AI Reply Mode', 'ai.reply_mention': 'Reply Only When Mentioned',
+        'ai.reply_mention_desc': 'AI only replies when someone pings/mentions the bot. Default mode.',
+        'ai.reply_all': 'Reply to All Messages', 'ai.reply_all_desc': 'AI replies to every message in whitelisted channels (no ping needed).',
+        'ai.reply_all_warn': '⚠ Warning: Can be spammy.', 'ai.disable_ping': 'Disable Ping in Reply',
+        'ai.disable_ping_desc': 'If enabled, the AI will replace all user mentions in its replies with plain usernames (no ping).',
+        'ai.none': 'None added.',
+        'reaction.title': 'Auto Reaction', 'reaction.desc': 'Manage automatic reactions remotely.',
+        'reaction.global': 'Global Enable', 'reaction.global_on': 'ON: Reaction works everywhere.',
+        'reaction.channels': 'Whitelisted Channels', 'reaction.channels_desc': 'Enable even if Global is OFF.',
+        'reaction.add_channel': 'Add Channel', 'reaction.add_trigger': 'Add New Trigger',
+        'reaction.type': 'Type', 'reaction.type_text': 'Text / Keyword', 'reaction.type_user': 'User ID',
+        'reaction.trigger': 'Trigger', 'reaction.emojis': 'Reaction Emojis',
+        'reaction.emojis_placeholder': 'e.g. 🔥 💯 <a:dance:123456>', 'reaction.add_trigger_btn': 'Add Trigger',
+        'clip.title': 'Clipboard', 'clip.desc': 'Define custom trigger words and their responses.',
+        'clip.add_pair': 'Add New Pair', 'clip.trigger_word': 'Trigger Word (Allowed User usage)',
+        'clip.trigger_placeholder': 'e.g. hello', 'clip.response': 'Response', 'clip.response_placeholder': 'e.g. Hello back!',
+        'clip.add': 'Add to Clipboard', 'clip.active': 'Active Clipboard Items',
+        'timed.title': 'Timed Messages', 'timed.desc': 'Schedule a message to be sent at a specific future date and time.',
+        'timed.schedule_new': 'Schedule New Message', 'timed.channel': 'Channel or User ID (DM)',
+        'timed.channel_placeholder': 'Paste Channel or User ID...', 'timed.date': 'Date (MM/DD)',
+        'timed.time': 'Time (12h)', 'timed.timezone': ' Your Timezone: ', 'timed.content': 'Message Content',
+        'timed.content_placeholder': 'Type message...', 'timed.schedule_btn': 'Schedule Message',
+        'timed.active': 'Scheduled Messages',
+        'recurring.title': 'Recurring Messages (Daily)', 'recurring.desc': 'Send a message repeatedly on selected days at a specific time.',
+        'recurring.days': 'Days', 'recurring.everyday': 'Every Day', 'recurring.sun': 'Sun', 'recurring.mon': 'Mon',
+        'recurring.tue': 'Tue', 'recurring.wed': 'Wed', 'recurring.thu': 'Thu', 'recurring.fri': 'Fri', 'recurring.sat': 'Sat',
+        'recurring.time': 'Time (24h)', 'recurring.add_btn': 'Add Recurring Message', 'recurring.active': 'Active Recurring Messages',
+        'allowed.title': 'Allowed ID Manager', 'allowed.desc': 'Manage users authorized to use bot commands.',
+        'allowed.add_user': 'Add User Access', 'allowed.user_placeholder': 'Paste User ID...',
+        'allowed.add_btn': 'Add User Access', 'allowed.remove': 'Remove',
+        'allowed.hint': 'Paste a User ID to grant access. The bot must be able to fetch the user (share a server/DM).',
+        'allowed.users_list': 'Authorized Users',
+        'help_page.title': 'Command List', 'help_page.desc': 'All available bot commands with descriptions and usage.',
+        'help_page.search_placeholder': 'Search commands...', 'help_page.utility': 'Utility Commands',
+        'help_page.special': 'Special Commands', 'help_page.reaction_role': 'Reaction Role',
+        'help_page.usage': 'Usage:', 'help_page.no_results': 'No commands found matching your search.',
+        'welcome.title': 'Welcomer', 'welcome.desc': 'Setup beautiful live welcome images for your servers.',
+        'welcome.preview': 'Welcome Preview Options', 'welcome.type': 'Welcome Type',
+        'welcome.type_card': 'Card Welcome (Image)', 'welcome.type_text': 'Text Welcome',
+        'welcome.card_text': 'Image Card Text', 'welcome.placeholders': 'Placeholders: {user}, {server}, {count}. Use new lines to create new line in card',
+        'welcome.font_color': 'Username Font Color', 'welcome.white': 'White', 'welcome.black': 'Black',
+        'welcome.red': 'Red', 'welcome.purple': 'Purple', 'welcome.yellow': 'Yellow', 'welcome.orange': 'Orange',
+        'welcome.green': 'Green', 'welcome.blue': 'Blue', 'welcome.save': 'Save Changes',
+        'welcome.channel': 'Paste Channel ID...', 'welcome.enable': 'Enable in this Channel',
+        'welcome.bg_label': 'Background Image', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'welcome.bg_info': 'Format: JPG or PNG. Max 5MB. File auto-saved as welcome.jpg. Recommended size: 1024x450 pixels.',
+        'common.none': 'None added.'
+    }
+};
+
+function getCurrentLang() { return localStorage.getItem('rixucord_lang') || 'id'; }
+function setLang(lang) { localStorage.setItem('rixucord_lang', lang); applyLang(); }
+function applyLang() {
+    const lang = getCurrentLang();
+    const dict = translations[lang] || translations.id;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) el.placeholder = dict[key];
+    });
+    const toggle = document.getElementById('langToggle');
+    if (toggle) toggle.checked = (lang === 'en');
+    document.documentElement.lang = lang;
+    if (typeof applyCmdLang === 'function') applyCmdLang();
+}
+
+/* ============================================
+   CORE JS — Sidebar, Particles, Effects
+   ============================================ */
+
+function toggleSidebar() {
+    var sidebar = document.getElementById('appSidebar');
+    var main = document.getElementById('mainContent');
+    var hamburger = document.getElementById('hamburgerBtn');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (!sidebar || !main) return;
+    var isCollapsed = sidebar.classList.toggle('collapsed');
+    var isMobile = window.innerWidth <= 768;
+    if (!isCollapsed) {
+        main.classList.remove('sidebar-collapsed');
+        if (!isMobile) main.style.marginLeft = '240px';
+        if (hamburger) hamburger.classList.add('open');
+    } else {
+        main.classList.add('sidebar-collapsed');
+        main.style.marginLeft = '0';
+        if (hamburger) hamburger.classList.remove('open');
+    }
+    if (isMobile && overlay) {
+        if (!isCollapsed) { overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        else { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+    }
+}
+
+function btnSuccessPulse(btn, text) {
+    const orig = btn.innerText; btn.innerText = text;
+    btn.classList.add('btn-success-pulse');
+    setTimeout(() => { btn.classList.remove('btn-success-pulse'); btn.innerText = orig; btn.disabled = false; }, 1500);
+}
+
+function initParallaxTilt() {
+    if (typeof gsap === 'undefined') return;
+    document.querySelectorAll('.card-tilt').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            gsap.to(card, { rotateY: x * 8, rotateX: -y * 8, scale: 1.02, duration: 0.4, ease: 'power2.out' });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.6, ease: 'elastic.out(1,0.5)' });
+        });
+    });
+}
+
+(function initParticles() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const particles = [];
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2 + 0.5, alpha: Math.random() * 0.3 + 0.05
+        });
+    }
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(88,101,242,' + p.alpha + ')'; ctx.fill();
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = p.x - particles[j].x, dy = p.y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = 'rgba(88,101,242,' + (0.04 * (1 - dist / 120)) + ')'; ctx.stroke(); }
+            }
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+/* ============================================
+   DEMO — Hash Navigation, Dummy Data, View Toggle
+   ============================================ */
+
+const DUMMY_GUILDS = [
+    { id: '1029384756102938', name: 'RIXUCORD Hub', members: '4.821', icon: 'https://cdn.discordapp.com/embed/avatars/0.png' },
+    { id: '2938475610293847', name: 'Gaming Lounge', members: '3.102', icon: 'https://cdn.discordapp.com/embed/avatars/1.png' },
+    { id: '3847561029384756', name: 'Anime World', members: '2.455', icon: 'https://cdn.discordapp.com/embed/avatars/2.png' },
+    { id: '4756102938475610', name: 'Dev Community', members: '2.102', icon: 'https://cdn.discordapp.com/embed/avatars/3.png' }
+];
+
+function renderGuilds() {
+    const list = document.getElementById('guildList');
+    if (!list) return;
+    list.innerHTML = DUMMY_GUILDS.map(g => `
+        <div class="guild-item" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#15151a;border-radius:12px;border:1px solid rgba(255,255,255,0.04);transition:0.2s;" onmouseover="this.style.background='#1a1a22'" onmouseout="this.style.background='#15151a'">
+            <img src="${g.icon}" style="width:36px;height:36px;border-radius:50%;flex-shrink:0;">
+            <div style="flex-grow:1;min-width:0;">
+                <div class="guild-name" style="font-weight:600;color:#fff;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.name}</div>
+                <div class="guild-sub" style="font-size:0.75rem;color:#666;">${g.members} members</div>
+            </div>
+            <div class="guild-id" style="font-size:0.7rem;color:#7983f5;font-family:'Courier New',monospace;flex-shrink:0;">${g.id}</div>
+        </div>
+    `).join('');
+}
+
+let uptimeSeconds = 259200; // 3 days
+function updateUptime() {
+    uptimeSeconds++;
+    let diff = uptimeSeconds;
+    let days = Math.floor(diff / 86400); diff %= 86400;
+    let hours = Math.floor(diff / 3600); diff %= 3600;
+    let minutes = Math.floor(diff / 60);
+    let seconds = diff % 60;
+    const el = document.getElementById('uptime');
+    if (el) el.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+function updateAvatarRing(newStatus) {
+    const wrapper = document.getElementById('avatarWrapper');
+    if (!wrapper) return;
+    wrapper.classList.remove('stroke-online', 'stroke-idle', 'stroke-dnd', 'stroke-offline');
+    if (newStatus === 'online') wrapper.classList.add('stroke-online');
+    else if (newStatus === 'idle') wrapper.classList.add('stroke-idle');
+    else if (newStatus === 'dnd') wrapper.classList.add('stroke-dnd');
+    else wrapper.classList.add('stroke-offline');
+}
+
+function demoPulse(btn, text) { btnSuccessPulse(btn, text); }
+
+function demoReactionGlobal(el) {
+    const text = document.getElementById('globalStatusText');
+    if (text) text.innerText = el.checked ? 'ON: Reaksi aktif di mana-mana.' : 'OFF: Reaksi aktif HANYA di Channel Diizinkan.';
+}
+
+function addBannedWord() {
+    const input = document.getElementById('newBannedWord');
+    const list = document.getElementById('bannedList');
+    if (!input || !list) return;
+    const w = input.value.trim();
+    if (!w) return;
+    const div = document.createElement('div');
+    div.style.cssText = 'background:#2a2a35; padding:8px 15px; border-radius:20px; display:flex; align-items:center; gap:10px; border:1px solid rgba(255,255,255,0.1);';
+    div.innerHTML = `<span>${w}</span><span onclick="this.parentElement.remove()" style="cursor:pointer; color:#5865F2; font-weight:bold;">&times;</span>`;
+    list.appendChild(div);
+    input.value = '';
+}
+
+function addReactionTrigger() {
+    const type = document.getElementById('newType').value;
+    const trigger = document.getElementById('newTrigger').value.trim();
+    const emojiStr = document.getElementById('newEmojis').value.trim();
+    if (!trigger || !emojiStr) return alert('Isi semua field.');
+    const listId = type === 'text' ? 'textList' : 'userList';
+    const list = document.getElementById(listId);
+    if (!list) return;
+    const div = document.createElement('div');
+    div.className = 'trigger-item';
+    const name = type === 'text' ? `"${trigger}"` : `User: ${trigger}`;
+    div.innerHTML = `<div class="trigger-info"><div class="trigger-name">${name}</div><div class="trigger-emojis">${emojiStr}</div></div><button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>`;
+    list.appendChild(div);
+    document.getElementById('newTrigger').value = '';
+    document.getElementById('newEmojis').value = '';
+}
+
+function addClipPair() {
+    const trigger = document.getElementById('newTrigger').value.trim();
+    const response = document.getElementById('newResponse').value.trim();
+    if (!trigger || !response) return alert('Isi trigger dan response.');
+    if (trigger.includes(' ')) return alert('Trigger tidak boleh ada spasi.');
+    const list = document.getElementById('clipList');
+    if (!list) return;
+    const div = document.createElement('div');
+    div.className = 'trigger-item';
+    div.innerHTML = `<div class="trigger-info"><div class="trigger-name">!${trigger}</div><div class="trigger-response">${response.replace(/</g,'&lt;')}</div></div><button class="btn-delete" onclick="this.closest('.trigger-item').remove()"><i class="fas fa-trash"></i></button>`;
+    list.appendChild(div);
+    document.getElementById('newTrigger').value = '';
+    document.getElementById('newResponse').value = '';
+}
+
+function toggleWelcomeType() {
+    const type = document.getElementById('welcomeType').value;
+    document.getElementById('cardSetupSection').style.display = type === 'text' ? 'none' : 'grid';
+    document.getElementById('textSetupSection').style.display = type === 'text' ? 'grid' : 'none';
+}
+
+function demoUploadBg(btn) {
+    btn.disabled = true; btn.innerText = 'Uploading...';
+    setTimeout(() => {
+        btn.innerText = 'Done'; btn.style.background = '#2ecc71';
+        document.getElementById('bgUploadResult').innerHTML = '<div style="color:#2ecc71;">✓ Background berhasil diupload! (Demo)</div>';
+        setTimeout(() => { btn.disabled = false; btn.innerText = 'Upload'; btn.style.background = ''; }, 2000);
+    }, 800);
+}
+
+function toggleEveryday() {
+    const checked = document.getElementById('recEveryday').checked;
+    for (let i = 0; i <= 6; i++) document.getElementById('day' + i).checked = checked;
+}
+function syncEveryday() {
+    const all = [0,1,2,3,4,5,6].every(i => document.getElementById('day' + i).checked);
+    document.getElementById('recEveryday').checked = all;
+}
+
+/* ============================================
+   HELP — Command descriptions ID/EN + search
+   ============================================ */
+
+const cmdDesc = {
+    id: {
+        purge: 'Hapus pesan bot terbaru di channel ini.', say: 'Ulangi teks yang kamu tulis.',
+        lock: 'Kunci channel ini. Semua role non-admin gabisa kirim pesan. Admin & staff tetap bisa chat.',
+        unlock: 'Buka kunci channel. Restorasi permission kirim pesan buat semua role.',
+        warn: 'Kasih peringatan ke user. Setelah 3 warning, user auto-mute 1 jam dan warning di-reset.',
+        mute: 'Mute user pakai Discord timeout. Default 10 menit. Maksimal 28 hari.',
+        unmute: 'Lepas timeout/mute dari user.', kick: 'Kick user dari server.', ban: 'Ban user dari server.',
+        unban: 'Unban user berdasarkan ID Discord.',
+        slowmode: 'Set slowmode channel. Pakai 0 buat matiin. Range: 0-21600 detik.',
+        nuke: 'Bikin ulang channel ini dari awal. Hapus semua pesan dengan clone channel + setting yang sama.',
+        trap: 'Toggle trap channel. Siapapun (kecuali staff) yang ngirim pesan di sini bakal auto-kick. Pesannya juga ikut kehapus.',
+        serverinfo: 'Tampilin info server: owner, jumlah member, boost level, channel, role, emoji, tanggal dibuat.',
+        userinfo: 'Tampilin info user: tanggal join, akun dibuat, role, permission utama. Mention user atau liat diri sendiri.',
+        roleinfo: 'Tampilin info role: jumlah member, posisi, warna, permission, status mentionable/hoisted.',
+        avatar: 'Tampilin avatar user ukuran penuh (1024px PNG).',
+        poll: 'Bikin poll cepet dengan voting reaction. Pisah pertanyaan dan opsi dengan |. Maksimal 10 opsi.',
+        giveaway: 'Mulai giveaway. Bot posting embed, user react pakai emoji party buat ikut. Winner otomatis dipilih pas timer habis.',
+        trigger: 'Custom Clipboard Trigger. Set respons teks custom di halaman Clipboard dashboard.',
+        math: 'Kalkulator. Ketik ekspresi matematika langsung (misal 5+5, 10*2, sqrt(16)).',
+        currency: 'Konversi mata uang fiat. (misal 10 usd to idr, 50 eur to jpy).',
+        ip: 'Cari alamat IP. Nampilin ISP, lokasi, dan detail tiap IP. (misal ip 1.1.1.1)',
+        reactionrole: 'Setup reaction role — tambah mapping emoji-ke-role di sebuah message. User react buat dapet role yang terhubung.'
+    },
+    en: {
+        purge: 'Delete bot\'s own recent messages in this channel.', say: 'Echo back the text you provide.',
+        lock: 'Lock current channel. Denies Send Messages for all non-admin roles. Admins & staff can still chat.',
+        unlock: 'Unlock current channel. Restores Send Messages for all roles.',
+        warn: 'Warn a user. After 3 warnings, user is auto-muted for 1 hour and warnings are cleared.',
+        mute: 'Mute a user using Discord timeout. Default duration is 10 minutes. Max 28 days.',
+        unmute: 'Remove timeout/mute from a user.', kick: 'Kick a user from the server.', ban: 'Ban a user from the server.',
+        unban: 'Unban a user by their Discord ID.',
+        slowmode: 'Set channel slowmode. Use 0 to disable. Range: 0-21600 seconds.',
+        nuke: 'Recreate this channel from scratch. Deletes all messages by cloning the channel with same settings.',
+        trap: 'Toggle trap channel. Anyone (except staff) who sends a message here will be auto-kicked. Their message is also deleted.',
+        serverinfo: 'Show server information: owner, member count, boost level, channels, roles, emojis, creation date.',
+        userinfo: 'Show user information: join date, account creation, roles, key permissions. Mention a user or view yourself.',
+        roleinfo: 'Show role information: member count, position, color, permissions, mentionable/hoisted status.',
+        avatar: 'Show a user\'s avatar in full size (1024px PNG).',
+        poll: 'Create a quick poll with reaction-based voting. Separate question and options with |. Max 10 options.',
+        giveaway: 'Start a giveaway. Bot posts an embed, users react with a party emoji to enter. Winner is auto-picked when timer ends.',
+        trigger: 'Custom Clipboard Trigger. Set up custom text responses in the Clipboard dashboard page.',
+        math: 'Calculator. Type math expressions directly (e.g. 5+5, 10*2, sqrt(16)).',
+        currency: 'Fiat currency exchange. (e.g. 10 usd to inr, 50 eur to jpy).',
+        ip: 'IP address lookup. Shows ISP, location, and details for any IP. (e.g. ip 1.1.1.1)',
+        reactionrole: 'Setup reaction role — add emoji-to-role mapping to a message. Users react to get the linked role.'
+    }
+};
+
+function applyCmdLang() {
+    const lang = getCurrentLang();
+    const dict = cmdDesc[lang] || cmdDesc.id;
+    document.querySelectorAll('.cmd-desc[data-cmd]').forEach(el => {
+        const key = el.getAttribute('data-cmd');
+        if (dict[key]) el.textContent = dict[key];
+    });
+}
+
+function filterCmds() {
+    const query = document.getElementById('searchCmd').value.toLowerCase().trim();
+    const items = document.querySelectorAll('.cmd-item');
+    let visible = 0;
+    items.forEach(item => {
+        const searchText = (item.getAttribute('data-search') || '') + ' ' + item.textContent.toLowerCase();
+        if (query === '' || searchText.includes(query)) { item.classList.remove('hidden'); visible++; }
+        else { item.classList.add('hidden'); }
+    });
+    document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+    document.querySelectorAll('.cmd-section').forEach(section => {
+        const visibleItems = section.querySelectorAll('.cmd-item:not(.hidden)');
+        section.style.display = visibleItems.length > 0 ? '' : 'none';
+    });
+}
+
+/* ============================================
+   INIT — Sidebar state, view routing, uptime
+   ============================================ */
+
+function showView(viewName) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const target = document.getElementById('view-' + viewName);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+    const nav = document.querySelector('.nav-link[data-view="' + viewName + '"]');
+    if (nav) nav.classList.add('active');
+    // Close sidebar on mobile after nav
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('appSidebar');
+        if (sidebar && !sidebar.classList.contains('collapsed')) toggleSidebar();
+    }
+    window.scrollTo(0, 0);
+}
+
+function handleHash() {
+    const hash = (location.hash || '#dashboard').replace('#', '');
+    const validViews = ['dashboard','ai','reaction','clipboard','timed_msg','allowed','welcomer','help'];
+    showView(validViews.includes(hash) ? hash : 'dashboard');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar initial state
+    var isMobile = window.innerWidth <= 768;
+    var collapsed = isMobile ? true : (localStorage.getItem('sidecord_sidebar') === '1');
+    var sidebar = document.getElementById('appSidebar');
+    var main = document.getElementById('mainContent');
+    var hamburger = document.getElementById('hamburgerBtn');
+    var overlay = document.getElementById('sidebarOverlay');
+    if (sidebar && main) {
+        if (collapsed) {
+            sidebar.classList.add('collapsed');
+            main.classList.add('sidebar-collapsed');
+            main.style.marginLeft = '0';
+            if (hamburger) hamburger.classList.remove('open');
+        } else { if (hamburger) hamburger.classList.add('open'); }
+        sidebar.style.opacity = '1';
+    }
+    if (overlay) overlay.addEventListener('click', function() {
+        if (sidebar && !sidebar.classList.contains('collapsed')) toggleSidebar();
+    });
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768 && sidebar && !sidebar.classList.contains('collapsed')) toggleSidebar();
+    });
+
+    // Nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // let hash change handle it; close mobile sidebar
+            if (window.innerWidth <= 768) {
+                setTimeout(() => { if (sidebar && !sidebar.classList.contains('collapsed')) toggleSidebar(); }, 50);
+            }
+        });
+    });
+
+    // Hash routing
+    window.addEventListener('hashchange', handleHash);
+    handleHash();
+
+    // Render dummy data
+    renderGuilds();
+    updateUptime();
+    setInterval(updateUptime, 1000);
+
+    // Timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const tzEl = document.getElementById('userTimezone'); if (tzEl) tzEl.innerText = tz;
+    const tzEl2 = document.getElementById('recTimezone'); if (tzEl2) tzEl2.innerText = tz;
+
+    // Lang
+    applyLang();
+
+    // Parallax + page enter
+    initParallaxTilt();
+    var els = document.querySelectorAll('.section-card, .main-container, .glass-card, .section-header');
+    setTimeout(function() { els.forEach(function(el) { el.style.opacity = '1'; }); }, 600);
+});
+
+window.toggleSidebar = toggleSidebar;
+window.setLang = setLang;
+window.getCurrentLang = getCurrentLang;
+window.applyLang = applyLang;
+window.applyCmdLang = applyCmdLang;
+    </script>
+</body>
+</html>
