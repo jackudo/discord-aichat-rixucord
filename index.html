@@ -792,6 +792,24 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
 .switch-mini input:checked + .slider { background-color: #5865F2; }
 .switch-mini input:checked + .slider:before { transform: translateX(22px); }
 
+/* Reputation page */
+.module-style .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+.module-style .keyword-row { display: flex; gap: 10px; align-items: flex-end; }
+.module-style .keyword-row select { flex: 1; }
+.module-style .keyword-row input { flex: 1; }
+.module-style .leaderboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.module-style .leaderboard-col { background: #15151a; border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+.module-style .leaderboard-title { font-size: 1rem; font-weight: 700; color: #7983f5; margin-bottom: 12px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.module-style .lb-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; margin-bottom: 6px; background: #1a1a20; transition: 0.2s; }
+.module-style .lb-item:hover { background: #22222a; }
+.module-style .lb-rank { width: 28px; text-align: center; font-weight: 700; font-size: 0.9rem; color: #7983f5; flex-shrink: 0; }
+.module-style .lb-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.module-style .lb-info { flex-grow: 1; min-width: 0; }
+.module-style .lb-name { font-weight: 600; color: #fff; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.module-style .lb-count { font-weight: 700; color: #7983f5; font-size: 0.9rem; flex-shrink: 0; }
+.module-style .lb-empty { text-align: center; color: #555; font-style: italic; padding: 20px 0; font-size: 0.85rem; }
+@media (max-width: 768px) { .module-style .leaderboard-grid { grid-template-columns: 1fr; } }
+
 /* Help page search */
 .search-box { width: 100%; max-width: 500px; margin: 0 auto 30px; display: block; padding: 14px 20px; background: #050508; border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; outline: none; transition: 0.3s; font-size: 1rem; }
 .search-box:focus { border-color: #5865F2; box-shadow: 0 0 15px rgba(88,101,242,0.2); }
@@ -900,6 +918,10 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
                 <a href="#welcomer" class="nav-item nav-link" data-view="welcomer">
                     <span class="nav-icon"><i class="fas fa-hand-sparkles" style="font-size:15px;color:#7983f5"></i></span>
                     <span class="nav-label" data-i18n="nav.welcomer">Welcomer</span>
+                </a>
+                <a href="#reputation" class="nav-item nav-link" data-view="reputation">
+                    <span class="nav-icon"><i class="fas fa-trophy" style="font-size:15px;color:#f5b53f"></i></span>
+                    <span class="nav-label" data-i18n="nav.reputation">Reputasi</span>
                 </a>
                 <a href="#help" class="nav-item nav-link" data-view="help">
                     <span class="nav-icon"><i class="fas fa-list-alt" style="font-size:15px;color:#7983f5"></i></span>
@@ -1507,6 +1529,75 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
                 </div>
             </div>
         </div>
+
+        <!-- ===== MESSAGE COUNT TRIGGER ===== -->
+
+        <!-- Add New MsgCount -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="msgcount.title">Trigger Hitung Pesan</div>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;" data-i18n="msgcount.desc">Kirim pesan otomatis setiap X pesan di channel tertentu.</p>
+            <div class="input-group">
+                <label class="input-label" data-i18n="timed.channel">ID Channel atau User (DM)</label>
+                <input type="text" id="mcChannelId" class="input-field" placeholder="Tempel ID Channel..." data-i18n-placeholder="msgcount.channel_placeholder" oninput="alert('Demo: validasi butuh server aktif.')">
+                <div id="mcChannelPreview" style="margin-top: 10px; display: none;"></div>
+            </div>
+            <div class="input-group">
+                <label class="input-label" data-i18n="msgcount.threshold">Threshold (jumlah pesan)</label>
+                <input type="number" id="mcThreshold" class="input-field" min="1" value="100" placeholder="cth: 100" data-i18n-placeholder="msgcount.threshold_placeholder">
+            </div>
+            <div class="input-group">
+                <label class="input-label" data-i18n="msgcount.message">Isi Pesan</label>
+                <textarea id="mcMessage" class="input-field" placeholder="Tulis pesan... Placeholder: {channel}, {server}, {count}" data-i18n-placeholder="msgcount.message_placeholder" style="resize: vertical; min-height: 100px;"></textarea>
+            </div>
+            <button id="btnMcSave" class="btn-add" data-i18n="msgcount.add_btn" disabled onclick="alert('Demo: isi channel ID untuk enable.')">Tambah Trigger</button>
+        </div>
+
+        <!-- MsgCount List -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="msgcount.active">Trigger Aktif</div>
+            <div id="mcList">
+                <div class="recurring-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="cp-icon" style="width:20px;height:20px;border-radius:50%;">
+                            #chat
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">7/10</span>
+                        </div>
+                        <div class="msg-detail">🎉 {channel} udah capai {count} pesan! Gas terus!</div>
+                        <div class="msg-meta">
+                            <div style="background:#222; border-radius:6px; height:6px; margin-top:6px; overflow:hidden;">
+                                <div style="background:linear-gradient(90deg,#5865F2,#4752C4); height:100%; width:70%; transition:width 0.3s;"></div>
+                            </div>
+                            <span style="font-size:0.75rem;" data-i18n="msgcount.progress">Progres</span> <span style="font-size:0.75rem;">RIXUCORD Hub · 70%</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                        <label class="switch-mini"><input type="checkbox" checked onchange="this.closest('.recurring-item').classList.toggle('disabled', !this.checked)"><span class="slider"></span></label>
+                        <button class="btn-delete" onclick="this.closest('.recurring-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="recurring-item">
+                    <div class="msg-info">
+                        <div class="msg-title">
+                            <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="cp-icon" style="width:20px;height:20px;border-radius:50%;">
+                            #general
+                            <span style="font-size:0.75rem; color:#7983f5; margin-left:10px; background:rgba(88, 101, 242, 0.1); padding:2px 8px; border-radius:10px; white-space:nowrap;">3/25</span>
+                        </div>
+                        <div class="msg-detail">💬 {server} channel {channel} baru {count} pesan!</div>
+                        <div class="msg-meta">
+                            <div style="background:#222; border-radius:6px; height:6px; margin-top:6px; overflow:hidden;">
+                                <div style="background:linear-gradient(90deg,#5865F2,#4752C4); height:100%; width:12%; transition:width 0.3s;"></div>
+                            </div>
+                            <span style="font-size:0.75rem;" data-i18n="msgcount.progress">Progres</span> <span style="font-size:0.75rem;">Gaming Lounge · 12%</span>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
+                        <label class="switch-mini"><input type="checkbox" checked onchange="this.closest('.recurring-item').classList.toggle('disabled', !this.checked)"><span class="slider"></span></label>
+                        <button class="btn-delete" onclick="this.closest('.recurring-item').remove()"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     </div>
 </div>
@@ -1748,6 +1839,175 @@ Enjoyy and Have Fun 🎉</textarea>
     </div>
 </div>
 
+<!-- ============ VIEW: REPUTATION (cmd_reputation.ejs) ============ -->
+<div class="view" id="view-reputation">
+    <div class="module-style">
+    <div class="main-container" style="max-width:1000px;">
+        <div class="header">
+            <h1 data-i18n="rep.title">Sistem Reputasi</h1>
+            <p data-i18n="rep.desc">Kelola sistem reputasi member dengan keyword + mention.</p>
+        </div>
+
+        <!-- General Settings -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="rep.general">Pengaturan Umum</div>
+            <div class="form-grid">
+                <!-- Allow All -->
+                <div class="input-group">
+                    <label class="input-label" data-i18n="rep.allow_all">Izinkan Semua Member</label>
+                    <div class="toggle-row">
+                        <span style="font-size:0.85rem; color:#888;" data-i18n="rep.allow_all_desc">Non-admin juga bisa kasih rep</span>
+                        <label class="switch">
+                            <input type="checkbox" id="cfgAllowAll">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <!-- Cooldown -->
+                <div class="input-group">
+                    <label class="input-label" data-i18n="rep.cooldown">Cooldown (jam)</label>
+                    <input type="number" id="cfgCooldown" class="input-field" min="0" value="1" placeholder="1">
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="rep.cooldown_desc">Admin skip cooldown. Non-admin harus nunggu X jam sebelum kasih rep lagi.</span>
+                    </div>
+                </div>
+                <!-- Keyword -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="rep.keyword">Keyword</label>
+                    <div class="keyword-row">
+                        <select id="cfgKeywordPreset" class="input-field" onchange="if(this.value!=='custom')document.getElementById('cfgKeyword').value=this.value">
+                            <option value="+rep">+rep</option>
+                            <option value="+vouch">+vouch</option>
+                            <option value="+thanks">+thanks</option>
+                            <option value="custom" data-i18n="rep.custom">Custom...</option>
+                        </select>
+                        <input type="text" id="cfgKeyword" class="input-field" placeholder="+rep" value="+rep">
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="rep.keyword_desc">Keyword yang trigger rep. Pesan harus mengandung keyword + mention @user.</span>
+                    </div>
+                </div>
+                <!-- Message Template -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="rep.template">Template Pesan</label>
+                    <textarea id="cfgTemplate" class="input-field" placeholder="{giver} gave +rep to {receiver}! Total: {count} rep">{giver} gave +rep to {receiver}! Total: {count} rep</textarea>
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="rep.template_desc">Placeholder: {giver} = pemberi, {receiver} = penerima, {count} = total rep, {server} = nama server.</span>
+                    </div>
+                </div>
+                <!-- Bot Reply -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="rep.bot_reply">Balasan Bot</label>
+                    <div class="toggle-row">
+                        <span style="font-size:0.85rem; color:#888;" data-i18n="rep.bot_reply_desc">Kalo off, bot cuma hitung silently tanpa balas</span>
+                        <label class="switch">
+                            <input type="checkbox" id="cfgBotReply" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button id="btnSaveConfig" class="btn-add" onclick="btnSuccessPulse(this, 'Tersimpan!')" data-i18n="rep.save">Simpan Konfigurasi</button>
+        </div>
+
+        <!-- Whitelist Channels -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="rep.channels">Channel Whitelist</div>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;" data-i18n="rep.channels_desc">Rep detection cuma aktif di channel yang di-whitelist di sini.</p>
+            <input type="text" id="inputChannel" class="input-field" placeholder="Tempel ID Channel..." data-i18n-placeholder="rep.channel_placeholder" oninput="alert('Demo: validasi butuh server aktif.')">
+            <div id="previewChannel" style="display:none;"></div>
+            <button id="btnAddChannel" class="btn-add" data-i18n="rep.add_channel" disabled onclick="alert('Demo: validasi butuh server aktif.')">Tambah Channel</button>
+            <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#chat</div>
+                        <div class="whitelist-sub">RIXUCORD Hub · 1029384756102938</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#general</div>
+                        <div class="whitelist-sub">Gaming Lounge · 2938475610293847</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="rep.leaderboard">Leaderboard</div>
+            <div class="leaderboard-grid">
+                <div class="leaderboard-col">
+                    <div class="leaderboard-title" data-i18n="rep.member_lb">🏆 Leaderboard Member</div>
+                    <div id="memberLeaderboard">
+                        <div class="lb-item">
+                            <div class="lb-rank">#1</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">RizkyGamer</div></div>
+                            <div class="lb-count">48 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#2</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">SitiCoder</div></div>
+                            <div class="lb-count">35 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#3</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/2.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">BudiSaputra</div></div>
+                            <div class="lb-count">22 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#4</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/3.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">AndiPro</div></div>
+                            <div class="lb-count">15 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#5</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/4.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">DewiAnime</div></div>
+                            <div class="lb-count">9 rep</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaderboard-col">
+                    <div class="leaderboard-title" data-i18n="rep.admin_lb">👑 Leaderboard Admin</div>
+                    <div id="adminLeaderboard">
+                        <div class="lb-item">
+                            <div class="lb-rank">#1</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">AdminJack</div></div>
+                            <div class="lb-count">127 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#2</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">ModSarah</div></div>
+                            <div class="lb-count">89 rep</div>
+                        </div>
+                        <div class="lb-item">
+                            <div class="lb-rank">#3</div>
+                            <img src="https://cdn.discordapp.com/embed/avatars/2.png" class="lb-avatar">
+                            <div class="lb-info"><div class="lb-name">DevMike</div></div>
+                            <div class="lb-count">54 rep</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 <!-- ============ VIEW: HELP (cmd_help.ejs) ============ -->
 <div class="view" id="view-help">
     <div class="module-style">
@@ -1783,6 +2043,7 @@ Enjoyy and Have Fun 🎉</textarea>
                 <div class="cmd-item" data-search="giveaway prize winner draw hadiah undian"><div class="cmd-icon">GW</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>giveaway</div><div class="cmd-desc" data-cmd="giveaway"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!giveaway &lt;duration&gt; &lt;prize&gt;</span></div></div>
 
                 <div class="cmd-item" data-search="serverstats stats voice channel member bot boost"><div class="cmd-icon">SS</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>serverstats</div><div class="cmd-desc" data-cmd="serverstats"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!serverstats [on|off]</span></div></div>
+                <div class="cmd-item" data-search="rep reputation vouch thanks trophy leaderboard"><div class="cmd-icon">RR</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>rep</div><div class="cmd-desc" data-cmd="rep"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!rep [on|off|status|@user|top]</span></div></div>
             </div>
         </div>
 
@@ -1822,6 +2083,7 @@ const translations = {
         'nav.ai': 'AI Chat', 'nav.rpc': 'RPC Config', 'nav.reaction': 'Auto Reaction',
         'nav.clipboard': 'Clipboard', 'nav.auto_msg': 'Auto Message', 'nav.timed_msg': 'Pesan Terjadwal',
         'nav.allowed': 'ID Diizinkan', 'nav.welcomer': 'Welcomer', 'nav.cmd_list': 'Commands',
+        'nav.reputation': 'Reputasi',
         'nav.logout': 'Keluar', 'topbar.online': 'Online',
         'home.uptime': 'Waktu Aktif Sistem', 'home.status_mode': 'Status Mode',
         'home.servers': 'Server', 'home.members': 'Member', 'home.channels': 'Channel',
@@ -1871,6 +2133,12 @@ const translations = {
         'recurring.days': 'Hari', 'recurring.everyday': 'Setiap Hari', 'recurring.sun': 'Min', 'recurring.mon': 'Sen',
         'recurring.tue': 'Sel', 'recurring.wed': 'Rab', 'recurring.thu': 'Kam', 'recurring.fri': 'Jum', 'recurring.sat': 'Sab',
         'recurring.time': 'Jam (24h)', 'recurring.add_btn': 'Tambah Pesan Berulang', 'recurring.active': 'Pesan Berulang Aktif',
+        'msgcount.title': 'Trigger Hitung Pesan', 'msgcount.desc': 'Kirim pesan otomatis setiap X pesan di channel tertentu.',
+        'msgcount.threshold': 'Threshold (jumlah pesan)', 'msgcount.message': 'Isi Pesan',
+        'msgcount.add_btn': 'Tambah Trigger', 'msgcount.active': 'Trigger Aktif',
+        'msgcount.channel_placeholder': 'Tempel ID Channel...', 'msgcount.threshold_placeholder': 'cth: 100',
+        'msgcount.message_placeholder': 'Tulis pesan... Placeholder: {channel}, {server}, {count}',
+        'msgcount.progress': 'Progres', 'msgcount.no_results': 'Belum ada trigger.',
         'allowed.title': 'Manajer ID Diizinkan', 'allowed.desc': 'Kelola user yang diizinkan pakai command bot.',
         'allowed.add_user': 'Tambah Akses User', 'allowed.user_placeholder': 'Tempel ID User...',
         'allowed.add_btn': 'Tambah Akses User', 'allowed.remove': 'Hapus',
@@ -1896,6 +2164,21 @@ const translations = {
         'welcome.channels_desc': 'Tempel ID Channel untuk aktifkan welcome. Terbatas 1 per server.',
         'welcome.save': 'Simpan Konfigurasi', 'welcome.channel': 'Tempel ID Channel...',
         'welcome.enable': 'Aktifkan di Channel Ini', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'rep.title': 'Sistem Reputasi', 'rep.desc': 'Kelola sistem reputasi member dengan keyword + mention.',
+        'rep.general': 'Pengaturan Umum', 'rep.allow_all': 'Izinkan Semua Member',
+        'rep.allow_all_desc': 'Non-admin juga bisa kasih rep', 'rep.cooldown': 'Cooldown (jam)',
+        'rep.cooldown_desc': 'Admin skip cooldown. Non-admin harus nunggu X jam sebelum kasih rep lagi.',
+        'rep.keyword': 'Keyword', 'rep.custom': 'Custom...',
+        'rep.keyword_desc': 'Keyword yang trigger rep. Pesan harus mengandung keyword + mention @user.',
+        'rep.template': 'Template Pesan',
+        'rep.template_desc': 'Placeholder: {giver} = pemberi, {receiver} = penerima, {count} = total rep, {server} = nama server.',
+        'rep.bot_reply': 'Balasan Bot', 'rep.bot_reply_desc': 'Kalo off, bot cuma hitung silently tanpa balas',
+        'rep.save': 'Simpan Konfigurasi', 'rep.channels': 'Channel Whitelist',
+        'rep.channels_desc': 'Rep detection cuma aktif di channel yang di-whitelist di sini.',
+        'rep.channel_placeholder': 'Tempel ID Channel...', 'rep.add_channel': 'Tambah Channel',
+        'rep.leaderboard': 'Leaderboard', 'rep.member_lb': '🏆 Leaderboard Member',
+        'rep.admin_lb': '👑 Leaderboard Admin', 'rep.no_rep': 'Belum ada data.',
+        'rep.rep_count': 'rep', 'rep.enable': 'Aktifkan', 'rep.browse': 'Browse', 'rep.upload': 'Upload',
         'common.none': 'Belum ada.'
     },
     en: {
@@ -1903,6 +2186,7 @@ const translations = {
         'nav.ai': 'AI Chat', 'nav.rpc': 'RPC Config', 'nav.reaction': 'Auto Reaction',
         'nav.clipboard': 'Clipboard', 'nav.auto_msg': 'Auto Message', 'nav.timed_msg': 'Timed Messages',
         'nav.allowed': 'Allowed IDs', 'nav.welcomer': 'Welcomer', 'nav.cmd_list': 'Commands',
+        'nav.reputation': 'Reputation',
         'nav.logout': 'Logout', 'topbar.online': 'Online',
         'home.uptime': 'System Uptime', 'home.status_mode': 'Status Mode',
         'home.servers': 'Servers', 'home.members': 'Members', 'home.channels': 'Channels',
@@ -1952,6 +2236,12 @@ const translations = {
         'recurring.days': 'Days', 'recurring.everyday': 'Every Day', 'recurring.sun': 'Sun', 'recurring.mon': 'Mon',
         'recurring.tue': 'Tue', 'recurring.wed': 'Wed', 'recurring.thu': 'Thu', 'recurring.fri': 'Fri', 'recurring.sat': 'Sat',
         'recurring.time': 'Time (24h)', 'recurring.add_btn': 'Add Recurring Message', 'recurring.active': 'Active Recurring Messages',
+        'msgcount.title': 'Message Count Trigger', 'msgcount.desc': 'Send an automatic message every X messages in a specific channel.',
+        'msgcount.threshold': 'Threshold (message count)', 'msgcount.message': 'Message Content',
+        'msgcount.add_btn': 'Add Trigger', 'msgcount.active': 'Active Triggers',
+        'msgcount.channel_placeholder': 'Paste Channel ID...', 'msgcount.threshold_placeholder': 'e.g. 100',
+        'msgcount.message_placeholder': 'Type message... Placeholders: {channel}, {server}, {count}',
+        'msgcount.progress': 'Progress', 'msgcount.no_results': 'No triggers yet.',
         'allowed.title': 'Allowed ID Manager', 'allowed.desc': 'Manage users authorized to use bot commands.',
         'allowed.add_user': 'Add User Access', 'allowed.user_placeholder': 'Paste User ID...',
         'allowed.add_btn': 'Add User Access', 'allowed.remove': 'Remove',
@@ -1977,6 +2267,21 @@ const translations = {
         'welcome.channels_desc': 'Paste a Channel ID to enable welcoming. Limited to 1 per server.',
         'welcome.save': 'Save Configuration', 'welcome.channel': 'Paste Channel ID...',
         'welcome.enable': 'Enable in this Channel', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
+        'rep.title': 'Reputation System', 'rep.desc': 'Manage member reputation system with keyword + mention.',
+        'rep.general': 'General Settings', 'rep.allow_all': 'Allow All Members',
+        'rep.allow_all_desc': 'Non-admins can also give rep', 'rep.cooldown': 'Cooldown (hours)',
+        'rep.cooldown_desc': 'Admins skip cooldown. Non-admins must wait X hours before giving rep again.',
+        'rep.keyword': 'Keyword', 'rep.custom': 'Custom...',
+        'rep.keyword_desc': 'Keyword that triggers rep. Message must contain keyword + @user mention.',
+        'rep.template': 'Message Template',
+        'rep.template_desc': 'Placeholders: {giver} = giver, {receiver} = receiver, {count} = total rep, {server} = server name.',
+        'rep.bot_reply': 'Bot Reply', 'rep.bot_reply_desc': 'If off, bot only counts silently without replying',
+        'rep.save': 'Save Configuration', 'rep.channels': 'Whitelist Channels',
+        'rep.channels_desc': 'Rep detection only active in whitelisted channels.',
+        'rep.channel_placeholder': 'Paste Channel ID...', 'rep.add_channel': 'Add Channel',
+        'rep.leaderboard': 'Leaderboard', 'rep.member_lb': '🏆 Member Leaderboard',
+        'rep.admin_lb': '👑 Admin Leaderboard', 'rep.no_rep': 'No data yet.',
+        'rep.rep_count': 'rep', 'rep.enable': 'Enable', 'rep.browse': 'Browse', 'rep.upload': 'Upload',
         'common.none': 'None added.'
     }
 };
@@ -2284,6 +2589,7 @@ const cmdDesc = {
         poll: 'Bikin poll cepet dengan voting reaction. Pisah pertanyaan dan opsi dengan |. Maksimal 10 opsi.',
         giveaway: 'Mulai giveaway. Bot posting embed, user react pakai emoji party buat ikut. Winner otomatis dipilih pas timer habis.',
         serverstats: 'Bikin voice channel stats auto-update di server. Bikin category "📊 SERVER STATS" dengan 3 channel: Members, Bots, Boosts. Auto-update pas ada perubahan.',
+        rep: 'Aktifin sistem reputasi di channel. Detect keyword +rep + mention. Admin: on/off/status/top. Semua: !rep @user.',
         trigger: 'Custom Clipboard Trigger. Set respons teks custom di halaman Clipboard dashboard.',
         math: 'Kalkulator. Ketik ekspresi matematika langsung (misal 5+5, 10*2, sqrt(16)).',
         currency: 'Konversi mata uang fiat. (misal 10 usd to idr, 50 eur to jpy).',
@@ -2308,6 +2614,7 @@ const cmdDesc = {
         poll: 'Create a quick poll with reaction-based voting. Separate question and options with |. Max 10 options.',
         giveaway: 'Start a giveaway. Bot posts an embed, users react with a party emoji to enter. Winner is auto-picked when timer ends.',
         serverstats: 'Create auto-updating voice channel stats. Creates a "📊 SERVER STATS" category with 3 channels: Members, Bots, Boosts. Auto-updates on changes.',
+        rep: 'Toggle reputation system in channel. Detect keyword +rep + mention. Admin: on/off/status/top. All: !rep @user.',
         trigger: 'Custom Clipboard Trigger. Set up custom text responses in the Clipboard dashboard page.',
         math: 'Calculator. Type math expressions directly (e.g. 5+5, 10*2, sqrt(16)).',
         currency: 'Fiat currency exchange. (e.g. 10 usd to inr, 50 eur to jpy).',
@@ -2362,7 +2669,7 @@ function showView(viewName) {
 
 function handleHash() {
     const hash = (location.hash || '#dashboard').replace('#', '');
-    const validViews = ['dashboard','ai','reaction','clipboard','timed_msg','allowed','welcomer','help'];
+    const validViews = ['dashboard','ai','reaction','clipboard','timed_msg','allowed','welcomer','reputation','help'];
     showView(validViews.includes(hash) ? hash : 'dashboard');
 }
 
