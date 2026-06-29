@@ -689,6 +689,27 @@ body.page-loading::after {
 }
 .module-style .btn-delete:hover { background: #5865F2; color: white; }
 .module-style .no-items { text-align: center; color: #666; font-style: italic; padding: 20px; }
+.module-style .info-box {
+    background: rgba(88,101,242,0.08); border: 1px solid rgba(88,101,242,0.2);
+    border-radius: 10px; padding: 12px 15px; margin-top: 8px;
+    font-size: 0.82rem; color: #94a3b8; line-height: 1.6;
+}
+.module-style .info-box i { color: #7983f5; margin-right: 4px; }
+.module-style .field-row {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 10px; flex-wrap: wrap;
+}
+.module-style .field-row .field-emoji { width: 50px; text-align: center; }
+.module-style .field-row .field-label { flex: 1; min-width: 120px; }
+.module-style .field-row .field-channel { flex: 1; min-width: 120px; }
+.module-style .field-item {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    background: #1a1a20; border-radius: 10px; margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.module-style .field-item-info { flex-grow: 1; min-width: 0; }
+.module-style .field-item-label { font-weight: 600; color: #fff; font-size: 0.9rem; }
+.module-style .field-item-sub { font-size: 0.78rem; color: #888; }
 .module-style .warning-text { color: #5865F2; font-size: 0.85rem; margin-top: 5px; display: block; }
 .module-style .status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .module-style .status-info { flex: 1; min-width: 0; padding-right: 15px; }
@@ -1550,106 +1571,176 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
     <div class="main-container">
         <div class="header">
             <h1 data-i18n="welcome.title">Welcomer</h1>
-            <p data-i18n="welcome.desc">Buat gambar welcome live untuk server kamu.</p>
+            <p data-i18n="welcome.desc">Setup welcome embed untuk member baru di server kamu.</p>
         </div>
 
-        <div class="form-grid">
-            <!-- Setup Form & Preview -->
-            <div class="section-card">
-                <div class="section-title" data-i18n="welcome.preview">Opsi Preview Welcome</div>
+        <!-- Welcome Config -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="welcome.config">Welcome Configuration</div>
 
-                <div class="input-group full-width" style="margin-bottom: 25px;">
-                    <label class="input-label" data-i18n="welcome.type">Tipe Welcome</label>
-                    <select id="welcomeType" class="input-field" onchange="toggleWelcomeType()">
-                        <option value="card" data-i18n="welcome.type_card">Card Welcome (Gambar)</option>
-                        <option value="text" data-i18n="welcome.type_text">Text Welcome</option>
-                    </select>
-                </div>
+            <div class="input-group full-width" style="margin-bottom: 20px;">
+                <label class="input-label" data-i18n="welcome.type">Welcome Type</label>
+                <select id="welcomeType" class="input-field" onchange="toggleWelcomeType()">
+                    <option value="embed" data-i18n="welcome.type_embed">Embed Welcome (Rich Embed)</option>
+                    <option value="text" data-i18n="welcome.type_text">Text Welcome (Plain Text)</option>
+                </select>
+            </div>
 
-                <!-- CARD SETUP -->
-                <div id="cardSetupSection" class="form-grid">
-                    <div class="input-group full-width">
-                        <label class="input-label" data-i18n="welcome.card_text">Teks Card Gambar</label>
-                        <textarea id="cardMessage" class="input-field" style="min-height: 80px; resize: vertical; padding: 12px; font-family: inherit;">WELCOME TO {server}&#10;{user}&#10;Member #{count}</textarea>
-                        <p style="color:#aaa; font-size: 0.85rem; margin-top: 10px;">
-                            <b><span data-i18n="welcome.placeholders">Placeholder:</span></b> {user}, {server}, {count}. Pakai enter untuk baris baru di card.
-                        </p>
+            <!-- ===== EMBED SETUP ===== -->
+            <div id="embedSetupSection">
+
+                <!-- Author -->
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="input-group">
+                        <label class="input-label" data-i18n="welcome.embed_author_name">Author Name</label>
+                        <input type="text" id="embedAuthorName" class="input-field" value="{user}" placeholder="{user}">
                     </div>
-
-                    <div class="input-group full-width">
-                        <label class="input-label" data-i18n="welcome.bg_label">Background Image</label>
-                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(88,101,242,0.2);">
-                            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                                <input type="file" id="bgFile" accept="image/jpeg,image/png" style="display:none;" onchange="document.getElementById('bgFileName').textContent=this.files[0]?this.files[0].name+' ('+(this.files[0].size/1024/1024).toFixed(2)+' MB)':'No file selected'; document.getElementById('btnUploadBg').style.display=this.files[0]?'inline-block':'none'">
-                                <button type="button" class="btn-add" style="width:auto; margin:0; padding:10px 20px;" onclick="document.getElementById('bgFile').click()" data-i18n="welcome.browse">
-                                    <i class="fas fa-image" style="margin-right:6px;"></i> Browse File
-                                </button>
-                                <span id="bgFileName" style="color:#888; font-size:0.85rem;">No file selected</span>
-                                <button type="button" id="btnUploadBg" class="btn-add" style="width:auto; margin:0; padding:10px 20px; display:none;" onclick="demoUploadBg(this)" data-i18n="welcome.upload">Upload</button>
-                            </div>
-                            <div id="bgUploadResult" style="margin-top:10px;"></div>
-                            <p style="color:#aaa; font-size:0.8rem; margin-top:10px; line-height:1.6;">
-                                <i class="fas fa-info-circle" style="color:#7983f5; margin-right:4px;"></i>
-                                <span data-i18n="welcome.bg_info">Format: JPG atau PNG. Maksimal 5MB. File otomatis disimpan sebagai welcome.jpg. Rekomendasi ukuran: 1024x450 pixels.</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="input-group full-width">
-                        <label class="input-label" data-i18n="welcome.font_color">Warna Font Username</label>
-                        <select id="wTextColor" class="input-field">
-                            <option value="white" data-i18n="welcome.white">Putih</option>
-                            <option value="black" data-i18n="welcome.black">Hitam</option>
-                            <option value="red" data-i18n="welcome.red">Merah</option>
-                            <option value="purple" data-i18n="welcome.purple">Ungu</option>
-                            <option value="yellow" data-i18n="welcome.yellow">Kuning</option>
-                            <option value="orange" data-i18n="welcome.orange">Oranye</option>
-                            <option value="green" data-i18n="welcome.green">Hijau</option>
-                            <option value="blue" data-i18n="welcome.blue">Biru</option>
+                    <div class="input-group">
+                        <label class="input-label" data-i18n="welcome.embed_author_icon">Author Icon</label>
+                        <select id="embedAuthorIcon" class="input-field">
+                            <option value="user" data-i18n="welcome.icon_member">Member Avatar</option>
+                            <option value="bot" data-i18n="welcome.icon_bot">Bot Avatar</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- TEXT SETUP -->
-                <div id="textSetupSection" class="form-grid" style="display: none;">
-                    <div class="input-group full-width">
-                        <label class="input-label">Custom Text Message</label>
-                        <textarea id="textMessage" class="input-field" style="min-height: 100px; resize: vertical; padding: 12px; font-family: inherit;">hey {user} welcome to the {server} you are {count} member</textarea>
-                        <p style="color:#aaa; font-size: 0.85rem; margin-top: 10px;">
-                            <b><span data-i18n="welcome.placeholders">Placeholder:</span></b> {user}, {server}, {count}
-                        </p>
+                <!-- Body -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="welcome.embed_body">Body Text (Description)</label>
+                    <textarea id="embedBody" class="input-field" style="min-height: 100px;" placeholder="Haiii 🐦 {user} 🐦&#10;Welcome to **{server}** 🚀&#10;Enjoyy and Have Fun 🎉">Haiii 🐦 {user} 🐦
+Welcome to **{server}** 🚀
+Enjoyy and Have Fun 🎉</textarea>
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="welcome.placeholder_info">Placeholders: {user} = member mention, {server} = server name, {count} = member count. Use **text** for bold. Line breaks are supported.</span>
                     </div>
                 </div>
 
-                <button id="btnSaveConfig" data-i18n="welcome.save" onclick="demoPulse(this,'Saved!')" style="width: 100%; padding: 15px; font-size: 1.1rem; font-weight: 700; background: linear-gradient(90deg, #5865F2, #4752C4); border: none; border-radius: 12px; color: #fff; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 5px 20px rgba(88, 101, 242, 0.3);">
-                    Simpan Perubahan
-                </button>
+                <!-- Color + Thumbnail -->
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="input-group">
+                        <label class="input-label" data-i18n="welcome.embed_color">Embed Color</label>
+                        <input type="color" id="embedColor" class="input-field" value="#5865F2" style="height: 45px; padding: 5px; cursor: pointer;">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" data-i18n="welcome.embed_thumbnail">Thumbnail (Right)</label>
+                        <select id="embedThumbnail" class="input-field">
+                            <option value="user" data-i18n="welcome.icon_member">Member Avatar</option>
+                            <option value="bot" data-i18n="welcome.icon_bot">Bot Avatar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Channel Links / Fields -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="welcome.embed_fields">Channel Links (Fields)</label>
+                    <div class="info-box" style="margin-bottom: 12px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="welcome.fields_info">Add channel links that members can click. Each field shows as a clickable channel mention with a label and emoji.</span>
+                    </div>
+
+                    <div class="field-row">
+                        <input type="text" id="fieldEmoji" class="input-field field-emoji" placeholder="⚠️" maxlength="10">
+                        <input type="text" id="fieldLabel" class="input-field field-label" placeholder="Label (e.g. Read Rules)">
+                        <input type="text" id="fieldChannel" class="input-field field-channel" placeholder="Channel ID" oninput="onFieldChannelInput()">
+                        <button class="btn-add" style="width: auto; margin: 0; padding: 12px 20px;" onclick="addField()" data-i18n="welcome.add_field">Add</button>
+                    </div>
+                    <div id="previewFieldChannel" style="display:none;"></div>
+
+                    <div id="fieldsList" style="margin-top: 15px;">
+                        <div class="field-item">
+                            <div class="field-item-info">
+                                <div class="field-item-label">⚠️ Read Rules</div>
+                                <div class="field-item-sub">Channel: 123456789012345678</div>
+                            </div>
+                            <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.field-item').remove()"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-item-info">
+                                <div class="field-item-label">✅ Verify</div>
+                                <div class="field-item-sub">Channel: 234567890123456789</div>
+                            </div>
+                            <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.field-item').remove()"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Upload -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="welcome.embed_banner">Banner Image (Bottom)</label>
+                    <div class="info-box" style="margin-bottom: 12px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="welcome.banner_info">Upload a banner image shown at the bottom of the embed. Supports JPG, PNG, and GIF (animated). Recommended size: 800x300px. Max 8MB. File auto-saved as welcome_banner.</span>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; border: 1px solid rgba(88,101,242,0.2);">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <input type="file" id="bannerFile" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="document.getElementById('bannerFileName').textContent=this.files[0]?this.files[0].name+' ('+(this.files[0].size/1024/1024).toFixed(2)+' MB)':'No file selected'; document.getElementById('btnUploadBanner').style.display=this.files[0]?'inline-block':'none'">
+                            <button type="button" class="btn-add" style="width:auto; margin:0; padding:10px 20px;" onclick="document.getElementById('bannerFile').click()" data-i18n="welcome.browse">
+                                <i class="fas fa-image" style="margin-right:6px;"></i> Browse File
+                            </button>
+                            <span id="bannerFileName" style="color:#888; font-size:0.85rem;">No file selected</span>
+                            <button type="button" id="btnUploadBanner" class="btn-add" style="width:auto; margin:0; padding:10px 20px; display:none;" onclick="demoUploadBanner(this)" data-i18n="welcome.upload">Upload</button>
+                        </div>
+                        <div id="bannerUploadResult" style="margin-top:10px;"></div>
+                        <div id="bannerCurrent" style="margin-top:10px;">
+                            <div style="font-size:0.82rem; color:#aaa; margin-bottom:5px;" data-i18n="welcome.current_banner">Current banner:</div>
+                            <img src="https://via.placeholder.com/800x300/5865F2/ffffff?text=Welcome+Banner+Placeholder" style="max-width: 100%; max-height: 150px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                            <button type="button" class="btn-delete" style="margin-top:8px;" onclick="demoRemoveBanner(this)" data-i18n="welcome.remove_banner">Remove Banner</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="input-group full-width">
+                    <label class="input-label" data-i18n="welcome.embed_footer">Footer Text</label>
+                    <input type="text" id="embedFooter" class="input-field" value="Welcome to {server}!" placeholder="Welcome to {server}!">
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="welcome.footer_info">Shown at the bottom with server icon. Placeholders: {user}, {server}, {count}.</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Whitelisted Channels -->
-            <div class="section-card">
-                <div class="section-title">Whitelisted Channels</div>
-                <p style="color:#888; font-size:0.85rem; margin-bottom:15px;">Paste a specific Channel ID to enable welcoming. (Limited to 1 per server)</p>
-                <input type="text" id="inputChannel" class="input-field" data-i18n-placeholder="welcome.channel" placeholder="Tempel ID Channel...">
-                <div id="previewChannel" style="display:none;"></div>
-                <button id="btnAddChannel" class="btn-add" data-i18n="welcome.enable" disabled onclick="alert('Demo: fitur validasi butuh server aktif.')">Aktifkan di Channel Ini</button>
-                <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                    <div class="whitelist-item">
-                        <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
-                        <div class="whitelist-info">
-                            <div class="whitelist-name">#welcome</div>
-                            <div class="whitelist-sub">RIXUCORD Hub | Type: CARD</div>
-                        </div>
-                        <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+            <!-- ===== TEXT SETUP ===== -->
+            <div id="textSetupSection" style="display: none;">
+                <div class="input-group full-width">
+                    <label class="input-label">Custom Text Message</label>
+                    <textarea id="textMessage" class="input-field" style="min-height: 100px;" placeholder="hey {user} welcome to the {server} you are {count} member">hey {user} welcome to the {server} you are {count} member</textarea>
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span data-i18n="welcome.placeholder_info">Placeholders: {user} = member mention, {server} = server name, {count} = member count.</span>
                     </div>
-                    <div class="whitelist-item">
-                        <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="whitelist-icon">
-                        <div class="whitelist-info">
-                            <div class="whitelist-name">#gerbang</div>
-                            <div class="whitelist-sub">Gaming Lounge | Type: TEXT</div>
-                        </div>
-                        <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+
+            <button id="btnSaveConfig" class="btn-add" onclick="demoPulse(this,'Saved!')" data-i18n="welcome.save">Save Configuration</button>
+        </div>
+
+        <!-- Whitelisted Channels -->
+        <div class="section-card">
+            <div class="section-title" data-i18n="welcome.channels">Whitelisted Channels</div>
+            <p style="color:#888; font-size:0.85rem; margin-bottom:15px;" data-i18n="welcome.channels_desc">Paste a Channel ID to enable welcoming. Limited to 1 per server.</p>
+
+            <input type="text" id="inputChannel" class="input-field" placeholder="Paste Channel ID..." data-i18n-placeholder="welcome.channel" oninput="onChannelInput()">
+            <div id="previewChannel" style="display:none;"></div>
+            <button id="btnAddChannel" class="btn-add" data-i18n="welcome.enable" disabled onclick="confirmAddChannel()">Enable in this Channel</button>
+
+            <div id="channelList" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/0.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#welcome</div>
+                        <div class="whitelist-sub">RIXUCORD Hub | Type: EMBED</div>
                     </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
+                </div>
+                <div class="whitelist-item">
+                    <img src="https://cdn.discordapp.com/embed/avatars/1.png" class="whitelist-icon">
+                    <div class="whitelist-info">
+                        <div class="whitelist-name">#gerbang</div>
+                        <div class="whitelist-sub">Gaming Lounge | Type: TEXT</div>
+                    </div>
+                    <button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.whitelist-item').remove()"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         </div>
@@ -1789,16 +1880,22 @@ const translations = {
         'help_page.search_placeholder': 'Cari command...', 'help_page.utility': 'Command Utility',
         'help_page.special': 'Command Khusus', 'help_page.reaction_role': 'Reaction Role',
         'help_page.usage': 'Pakai:', 'help_page.no_results': 'Gak ada command yang cocok sama pencarian kamu.',
-        'welcome.title': 'Welcomer', 'welcome.desc': 'Buat gambar welcome live untuk server kamu.',
-        'welcome.preview': 'Opsi Preview Welcome', 'welcome.type': 'Tipe Welcome',
-        'welcome.type_card': 'Card Welcome (Gambar)', 'welcome.type_text': 'Text Welcome',
-        'welcome.card_text': 'Teks Card Gambar', 'welcome.placeholders': 'Placeholder: {user}, {server}, {count}. Pakai enter untuk baris baru di card.',
-        'welcome.font_color': 'Warna Font Username', 'welcome.white': 'Putih', 'welcome.black': 'Hitam',
-        'welcome.red': 'Merah', 'welcome.purple': 'Ungu', 'welcome.yellow': 'Kuning', 'welcome.orange': 'Oranye',
-        'welcome.green': 'Hijau', 'welcome.blue': 'Biru', 'welcome.save': 'Simpan Perubahan',
-        'welcome.channel': 'Tempel ID Channel...', 'welcome.enable': 'Aktifkan di Channel Ini',
-        'welcome.bg_label': 'Background Image', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
-        'welcome.bg_info': 'Format: JPG atau PNG. Maksimal 5MB. File otomatis disimpan sebagai welcome.jpg. Rekomendasi ukuran: 1024x450 pixels.',
+        'welcome.title': 'Welcomer', 'welcome.desc': 'Setup welcome embed untuk member baru di server kamu.',
+        'welcome.type': 'Tipe Welcome', 'welcome.type_embed': 'Embed Welcome (Rich Embed)',
+        'welcome.type_text': 'Text Welcome (Plain Text)', 'welcome.embed_author_name': 'Nama Author',
+        'welcome.embed_author_icon': 'Icon Author', 'welcome.icon_member': 'Avatar Member',
+        'welcome.icon_bot': 'Avatar Bot', 'welcome.embed_body': 'Teks Body (Deskripsi)',
+        'welcome.placeholder_info': 'Placeholder: {user} = mention member, {server} = nama server, {count} = jumlah member. Pakai **teks** untuk bold. Line break didukung.',
+        'welcome.embed_color': 'Warna Embed', 'welcome.embed_thumbnail': 'Thumbnail (Kanan)',
+        'welcome.embed_fields': 'Link Channel (Fields)', 'welcome.fields_info': 'Tambah link channel yang bisa diklik member. Tiap field tampil sebagai mention channel yang bisa diklik dengan label dan emoji.',
+        'welcome.add_field': 'Tambah', 'welcome.embed_banner': 'Gambar Banner (Bawah)',
+        'welcome.banner_info': 'Upload gambar banner yang tampil di bawah embed. Mendukung JPG, PNG, dan GIF (animasi). Rekomendasi ukuran: 800x300px. Maks 8MB. File otomatis disimpan sebagai welcome_banner.',
+        'welcome.current_banner': 'Banner sekarang:', 'welcome.remove_banner': 'Hapus Banner',
+        'welcome.embed_footer': 'Teks Footer', 'welcome.footer_info': 'Tampil di bawah dengan icon server. Placeholder: {user}, {server}, {count}.',
+        'welcome.config': 'Konfigurasi Welcome', 'welcome.channels': 'Channel Diizinkan',
+        'welcome.channels_desc': 'Tempel ID Channel untuk aktifkan welcome. Terbatas 1 per server.',
+        'welcome.save': 'Simpan Konfigurasi', 'welcome.channel': 'Tempel ID Channel...',
+        'welcome.enable': 'Aktifkan di Channel Ini', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
         'common.none': 'Belum ada.'
     },
     en: {
@@ -1864,16 +1961,22 @@ const translations = {
         'help_page.search_placeholder': 'Search commands...', 'help_page.utility': 'Utility Commands',
         'help_page.special': 'Special Commands', 'help_page.reaction_role': 'Reaction Role',
         'help_page.usage': 'Usage:', 'help_page.no_results': 'No commands found matching your search.',
-        'welcome.title': 'Welcomer', 'welcome.desc': 'Setup beautiful live welcome images for your servers.',
-        'welcome.preview': 'Welcome Preview Options', 'welcome.type': 'Welcome Type',
-        'welcome.type_card': 'Card Welcome (Image)', 'welcome.type_text': 'Text Welcome',
-        'welcome.card_text': 'Image Card Text', 'welcome.placeholders': 'Placeholders: {user}, {server}, {count}. Use new lines to create new line in card',
-        'welcome.font_color': 'Username Font Color', 'welcome.white': 'White', 'welcome.black': 'Black',
-        'welcome.red': 'Red', 'welcome.purple': 'Purple', 'welcome.yellow': 'Yellow', 'welcome.orange': 'Orange',
-        'welcome.green': 'Green', 'welcome.blue': 'Blue', 'welcome.save': 'Save Changes',
-        'welcome.channel': 'Paste Channel ID...', 'welcome.enable': 'Enable in this Channel',
-        'welcome.bg_label': 'Background Image', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
-        'welcome.bg_info': 'Format: JPG or PNG. Max 5MB. File auto-saved as welcome.jpg. Recommended size: 1024x450 pixels.',
+        'welcome.title': 'Welcomer', 'welcome.desc': 'Setup welcome embed for new members in your servers.',
+        'welcome.type': 'Welcome Type', 'welcome.type_embed': 'Embed Welcome (Rich Embed)',
+        'welcome.type_text': 'Text Welcome (Plain Text)', 'welcome.embed_author_name': 'Author Name',
+        'welcome.embed_author_icon': 'Author Icon', 'welcome.icon_member': 'Member Avatar',
+        'welcome.icon_bot': 'Bot Avatar', 'welcome.embed_body': 'Body Text (Description)',
+        'welcome.placeholder_info': 'Placeholders: {user} = member mention, {server} = server name, {count} = member count. Use **text** for bold. Line breaks are supported.',
+        'welcome.embed_color': 'Embed Color', 'welcome.embed_thumbnail': 'Thumbnail (Right)',
+        'welcome.embed_fields': 'Channel Links (Fields)', 'welcome.fields_info': 'Add channel links that members can click. Each field shows as a clickable channel mention with a label and emoji.',
+        'welcome.add_field': 'Add', 'welcome.embed_banner': 'Banner Image (Bottom)',
+        'welcome.banner_info': 'Upload a banner image shown at the bottom of the embed. Supports JPG, PNG, and GIF (animated). Recommended size: 800x300px. Max 8MB. File auto-saved as welcome_banner.',
+        'welcome.current_banner': 'Current banner:', 'welcome.remove_banner': 'Remove Banner',
+        'welcome.embed_footer': 'Footer Text', 'welcome.footer_info': 'Shown at the bottom with server icon. Placeholders: {user}, {server}, {count}.',
+        'welcome.config': 'Welcome Configuration', 'welcome.channels': 'Whitelisted Channels',
+        'welcome.channels_desc': 'Paste a Channel ID to enable welcoming. Limited to 1 per server.',
+        'welcome.save': 'Save Configuration', 'welcome.channel': 'Paste Channel ID...',
+        'welcome.enable': 'Enable in this Channel', 'welcome.browse': 'Browse File', 'welcome.upload': 'Upload',
         'common.none': 'None added.'
     }
 };
@@ -2080,17 +2183,73 @@ function addClipPair() {
 
 function toggleWelcomeType() {
     const type = document.getElementById('welcomeType').value;
-    document.getElementById('cardSetupSection').style.display = type === 'text' ? 'none' : 'grid';
-    document.getElementById('textSetupSection').style.display = type === 'text' ? 'grid' : 'none';
+    const embedSection = document.getElementById('embedSetupSection');
+    const textSection = document.getElementById('textSetupSection');
+    if (type === 'text') {
+        embedSection.style.display = 'none';
+        textSection.style.display = 'block';
+    } else {
+        embedSection.style.display = 'block';
+        textSection.style.display = 'none';
+    }
 }
 
-function demoUploadBg(btn) {
+function addField() {
+    const emoji = document.getElementById('fieldEmoji').value.trim();
+    const label = document.getElementById('fieldLabel').value.trim();
+    const channelId = document.getElementById('fieldChannel').value.trim();
+    if (!label || !channelId) return alert('Label and Channel ID required');
+    const list = document.getElementById('fieldsList');
+    if (!list) return;
+    const div = document.createElement('div');
+    div.className = 'field-item';
+    div.innerHTML = `<div class="field-item-info"><div class="field-item-label">${emoji || ''} ${label}</div><div class="field-item-sub">Channel: ${channelId}</div></div><button class="btn-delete" style="padding:5px 10px;" onclick="this.closest('.field-item').remove()"><i class="fas fa-trash"></i></button>`;
+    list.appendChild(div);
+    document.getElementById('fieldEmoji').value = '';
+    document.getElementById('fieldLabel').value = '';
+    document.getElementById('fieldChannel').value = '';
+    document.getElementById('previewFieldChannel').style.display = 'none';
+}
+
+function onFieldChannelInput() {
+    const id = document.getElementById('fieldChannel').value.trim();
+    const preview = document.getElementById('previewFieldChannel');
+    if (id.length < 17) { preview.style.display = 'none'; return; }
+    preview.style.display = 'block';
+    preview.className = 'server-preview';
+    preview.innerHTML = '<div class="sp-info"><div class="sp-name">#demo-channel</div><div class="sp-sub">Demo Server (preview)</div></div>';
+}
+
+function onChannelInput() {
+    const id = document.getElementById('inputChannel').value.trim();
+    const preview = document.getElementById('previewChannel');
+    const btn = document.getElementById('btnAddChannel');
+    if (id.length < 17) { preview.style.display = 'none'; btn.disabled = true; return; }
+    preview.style.display = 'block';
+    preview.className = 'server-preview';
+    preview.innerHTML = '<div class="sp-info"><div class="sp-name">#demo-channel</div><div class="sp-sub">Demo Server (preview)</div></div>';
+    btn.disabled = false;
+}
+
+function confirmAddChannel() {
+    document.getElementById('inputChannel').value = '';
+    document.getElementById('previewChannel').style.display = 'none';
+    document.getElementById('btnAddChannel').disabled = true;
+    alert('Demo: Channel added (no backend).');
+}
+
+function demoUploadBanner(btn) {
     btn.disabled = true; btn.innerText = 'Uploading...';
     setTimeout(() => {
         btn.innerText = 'Done'; btn.style.background = '#2ecc71';
-        document.getElementById('bgUploadResult').innerHTML = '<div style="color:#2ecc71;">✓ Background berhasil diupload! (Demo)</div>';
+        document.getElementById('bannerUploadResult').innerHTML = '<div style="color:#2ecc71;">✓ Banner uploaded! (Demo)</div>';
         setTimeout(() => { btn.disabled = false; btn.innerText = 'Upload'; btn.style.background = ''; }, 2000);
     }, 800);
+}
+
+function demoRemoveBanner(btn) {
+    if (!confirm('Remove banner?')) return;
+    document.getElementById('bannerCurrent').style.display = 'none';
 }
 
 function toggleEveryday() {
