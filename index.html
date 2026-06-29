@@ -1690,6 +1690,8 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
                 <div class="cmd-item" data-search="avatar profile picture image foto profil"><div class="cmd-icon">AV</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>avatar</div><div class="cmd-desc" data-cmd="avatar"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!avatar [@user]</span></div></div>
                 <div class="cmd-item" data-search="poll vote question reaction voting"><div class="cmd-icon">PL</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>poll</div><div class="cmd-desc" data-cmd="poll"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!poll &lt;question&gt; | option1 | option2 | ...</span></div></div>
                 <div class="cmd-item" data-search="giveaway prize winner draw hadiah undian"><div class="cmd-icon">GW</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>giveaway</div><div class="cmd-desc" data-cmd="giveaway"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!giveaway &lt;duration&gt; &lt;prize&gt;</span></div></div>
+
+                <div class="cmd-item" data-search="serverstats stats voice channel member bot boost"><div class="cmd-icon">SS</div><div class="cmd-body"><div class="cmd-name"><span class="prefix">!</span>serverstats</div><div class="cmd-desc" data-cmd="serverstats"></div><span class="cmd-usage-label" data-i18n="help_page.usage">Pakai:</span> <span class="cmd-usage">!serverstats [on|off]</span></div></div>
             </div>
         </div>
 
@@ -2122,6 +2124,7 @@ const cmdDesc = {
         avatar: 'Tampilin avatar user ukuran penuh (1024px PNG).',
         poll: 'Bikin poll cepet dengan voting reaction. Pisah pertanyaan dan opsi dengan |. Maksimal 10 opsi.',
         giveaway: 'Mulai giveaway. Bot posting embed, user react pakai emoji party buat ikut. Winner otomatis dipilih pas timer habis.',
+        serverstats: 'Bikin voice channel stats auto-update di server. Bikin category "📊 SERVER STATS" dengan 3 channel: Members, Bots, Boosts. Auto-update pas ada perubahan.',
         trigger: 'Custom Clipboard Trigger. Set respons teks custom di halaman Clipboard dashboard.',
         math: 'Kalkulator. Ketik ekspresi matematika langsung (misal 5+5, 10*2, sqrt(16)).',
         currency: 'Konversi mata uang fiat. (misal 10 usd to idr, 50 eur to jpy).',
@@ -2145,6 +2148,7 @@ const cmdDesc = {
         avatar: 'Show a user\'s avatar in full size (1024px PNG).',
         poll: 'Create a quick poll with reaction-based voting. Separate question and options with |. Max 10 options.',
         giveaway: 'Start a giveaway. Bot posts an embed, users react with a party emoji to enter. Winner is auto-picked when timer ends.',
+        serverstats: 'Create auto-updating voice channel stats. Creates a "📊 SERVER STATS" category with 3 channels: Members, Bots, Boosts. Auto-updates on changes.',
         trigger: 'Custom Clipboard Trigger. Set up custom text responses in the Clipboard dashboard page.',
         math: 'Calculator. Type math expressions directly (e.g. 5+5, 10*2, sqrt(16)).',
         currency: 'Fiat currency exchange. (e.g. 10 usd to inr, 50 eur to jpy).',
