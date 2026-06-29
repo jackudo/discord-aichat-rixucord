@@ -2758,8 +2758,8 @@ const MEMBER_AVATAR = 'https://cdn.discordapp.com/embed/avatars/1.png';
 
 // Dummy fields (match the 2 dummy field-items in the HTML)
 const previewDummyFields = [
-    { label: 'Read Rules', emoji: '⚠️', channelId: '123456789012345678' },
-    { label: 'Verify', emoji: '✅', channelId: '234567890123456789' }
+    { label: 'Read Rules', emoji: '⚠️', channelId: '123456789012345678', channelName: 'rules' },
+    { label: 'Verify', emoji: '✅', channelId: '234567890123456789', channelName: 'verify' }
 ];
 
 function updatePreview() {
@@ -2802,7 +2802,7 @@ function updatePreview() {
         if (!f.label) return;
         const div = document.createElement('div');
         div.className = 'preview-field';
-        div.innerHTML = `<div class="preview-field-label">\`${f.label}\`</div><div class="preview-field-value">${f.emoji || ''} #${f.channelId ? f.channelId.slice(-6) : 'channel'}</div>`;
+        div.innerHTML = `<div class="preview-field-label">\`${f.label}\`</div><div class="preview-field-value">${f.emoji || ''} #${f.channelName || (f.channelId ? f.channelId.slice(-6) : 'channel')}</div>`;
         fieldsContainer.appendChild(div);
     });
 
