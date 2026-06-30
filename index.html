@@ -1036,6 +1036,33 @@ input[type="date"], input[type="time"] { color-scheme: dark; }
     .preview-thumb img { width: 50px; height: 50px; }
     .preview-content { padding-left: 10px; }
 }
+
+/* Timed Messages mobile compact */
+@media(max-width: 768px) {
+    #view-timed_msg .section-card { padding: 14px !important; border-radius: 14px !important; margin-bottom: 12px !important; }
+    #view-timed_msg .section-title { font-size: 0.9rem !important; margin-bottom: 12px !important; padding-bottom: 6px !important; }
+    #view-timed_msg .input-field { padding: 10px 12px !important; font-size: 0.85rem !important; }
+    #view-timed_msg textarea.input-field { min-height: 70px !important; }
+    #view-timed_msg .btn-add { padding: 11px !important; font-size: 0.85rem !important; }
+    #view-timed_msg .btn-delete { padding: 6px 10px !important; }
+    #view-timed_msg .msg-item, #view-timed_msg .recurring-item { padding: 10px !important; flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+    #view-timed_msg .msg-item > div:last-child, #view-timed_msg .recurring-item > div:last-child { align-self: flex-end; }
+    #view-timed_msg .msg-title { font-size: 0.85rem !important; flex-wrap: wrap; }
+    #view-timed_msg .msg-detail { font-size: 0.8rem !important; max-height: 30px !important; }
+    #view-timed_msg .msg-meta { font-size: 0.72rem !important; }
+    #view-timed_msg .day-pill { padding: 6px 10px !important; font-size: 0.72rem !important; min-width: 36px !important; }
+    #view-timed_msg .days-row { gap: 5px !important; }
+    #view-timed_msg .field-row { flex-direction: column !important; gap: 8px !important; }
+    #view-timed_msg .field-row .field-emoji, #view-timed_msg .field-row .field-label, #view-timed_msg .field-row .field-channel { width: 100% !important; }
+    #view-timed_msg .switch-mini { width: 38px !important; height: 20px !important; }
+    #view-timed_msg .switch-mini .slider:before { height: 14px !important; width: 14px !important; }
+    #view-timed_msg .switch-mini input:checked + .slider:before { transform: translateX(18px) !important; }
+}
+@media(max-width: 430px) {
+    #view-timed_msg .section-card { padding: 12px !important; }
+    #view-timed_msg .day-pill { padding: 5px 8px !important; font-size: 0.68rem !important; min-width: 32px !important; }
+    #view-timed_msg .days-row { gap: 4px !important; }
+}
     </style>
 </head>
 <body>
